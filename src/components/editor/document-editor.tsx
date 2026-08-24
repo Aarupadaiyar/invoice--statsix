@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Save, Download, Printer, Loader2, Info } from "lucide-react";
 import type { DocumentType, ExtraCharge, LineItem } from "@/types/document";
-import { emptyLineItem, PAYMENT_METHODS, CURRENCIES } from "@/types/document";
+import { emptyLineItem, PAYMENT_METHODS, CURRENCIES, DOCUMENT_TITLE_PRESETS, defaultDocumentTitle } from "@/types/document";
 import type { BusinessProfileRecord, CustomerRecord } from "@/lib/data/mappers";
 import { documentSchema, type DocumentInput } from "@/lib/validation";
 import { api, ApiError } from "@/lib/api-client";
@@ -15,6 +15,7 @@ import { inputClass, labelClass, btnPrimary, btnSecondary, cardClass } from "@/l
 import { LineItemsEditor } from "@/components/editor/line-items-editor";
 import { CustomerPicker } from "@/components/editor/customer-picker";
 import { DocumentPreview } from "@/components/document-preview";
+import { LogoUpload } from "@/components/logo-upload";
 
 const INVOICE_STATUSES = ["draft", "sent", "paid", "overdue", "cancelled"];
 const RECEIPT_STATUSES = ["draft", "received"];
@@ -51,6 +52,7 @@ function buildInitialValue(opts: {
 
   return {
     documentType: opts.type,
+    documentTitle: defaultDocumentTitle(opts.type),
     documentNumber: opts.suggestedNumber,
     status: "draft",
     issueDate: today.toISOString().slice(0, 10),
@@ -291,6 +293,24 @@ export function DocumentEditor({
           <section className={`${cardClass} p-5`}>
             <h2 className="font-semibold mb-4">Document Information</h2>
             <div className="grid sm:grid-cols-2 gap-4">
+              <div className="sm:col-span-2">
+                <label className={labelClass}>Document heading</label>
+                <input
+                  className={inputClass}
+                  list="document-title-presets"
+                  value={value.documentTitle}
+                  onChange={(e) => set("documentTitle", e.target.value)}
+                  placeholder={defaultDocumentTitle(type)}
+                />
+                <datalist id="document-title-presets">
+                  {DOCUMENT_TITLE_PRESETS[type].map((preset) => (
+                    <option key={preset} value={preset} />
+                  ))}
+                </datalist>
+                <p className="mt-1 text-xs text-black/40">
+                  Shown as the big title on the document — e.g. &quot;Proforma Invoice&quot;, &quot;Tax Invoice&quot;, &quot;Quote&quot;.
+                </p>
+              </div>
               <div>
                 <label className={labelClass}>{type === "invoice" ? "Invoice" : "Receipt"} number</label>
                 <input className={inputClass} value={value.documentNumber} onChange={(e) => set("documentNumber", e.target.value)} />
@@ -370,6 +390,13 @@ export function DocumentEditor({
               <Link href="/settings/business" className="text-xs text-accent hover:underline">
                 Edit saved profile
               </Link>
+            </div>
+            <div className="mb-4">
+              <label className={labelClass}>Logo</label>
+              <LogoUpload
+                value={value.businessDetails.logoDataUrl}
+                onChange={(v) => set("businessDetails", { ...value.businessDetails, logoDataUrl: v })}
+              />
             </div>
             <div className="grid sm:grid-cols-2 gap-4">
               <div className="sm:col-span-2">

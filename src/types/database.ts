@@ -63,6 +63,7 @@ export type Database = {
           user_id: string;
           customer_id: string | null;
           document_type: string;
+          document_title: string;
           document_number: string;
           status: string;
           issue_date: string;

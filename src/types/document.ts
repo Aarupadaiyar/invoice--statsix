@@ -6,6 +6,15 @@ export type DocumentStatus = InvoiceStatus | ReceiptStatus;
 
 export type PaymentMethod = "cash" | "bank_transfer" | "card" | "upi" | "other";
 
+export function defaultDocumentTitle(type: DocumentType): string {
+  return type === "invoice" ? "Invoice" : "Receipt";
+}
+
+export const DOCUMENT_TITLE_PRESETS: Record<DocumentType, string[]> = {
+  invoice: ["Invoice", "Tax Invoice", "Proforma Invoice", "Quote", "Estimate", "Credit Note"],
+  receipt: ["Receipt", "Payment Receipt", "Cash Receipt", "Sales Receipt"],
+};
+
 export type LineItem = {
   id: string;
   name: string;
@@ -62,6 +71,7 @@ export type DocumentTotals = {
 export type DocumentRecord = {
   id: string;
   documentType: DocumentType;
+  documentTitle: string;
   documentNumber: string;
   status: DocumentStatus;
   issueDate: string;

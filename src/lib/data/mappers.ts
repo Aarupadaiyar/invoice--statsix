@@ -1,5 +1,6 @@
 import type { Database } from "@/types/database";
 import {
+  defaultDocumentTitle,
   emptyBusinessDetails,
   emptyCustomerDetails,
   emptyExtraCharge,
@@ -24,6 +25,7 @@ export function toDocumentRecord(row: DocumentRow): DocumentRecord {
   return {
     id: row.id,
     documentType: row.document_type as DocumentRecord["documentType"],
+    documentTitle: row.document_title || defaultDocumentTitle(row.document_type as DocumentRecord["documentType"]),
     documentNumber: row.document_number,
     status: row.status as DocumentRecord["status"],
     issueDate: row.issue_date,
@@ -52,6 +54,7 @@ export function toDocumentRecord(row: DocumentRow): DocumentRecord {
 export function toDocumentInput(doc: DocumentRecord): DocumentInput {
   return {
     documentType: doc.documentType,
+    documentTitle: doc.documentTitle,
     documentNumber: doc.documentNumber,
     status: doc.status,
     issueDate: doc.issueDate,

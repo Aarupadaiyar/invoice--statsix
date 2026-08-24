@@ -34,6 +34,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     .from("documents")
     .update({
       customer_id: v.customerId || null,
+      document_title: v.documentTitle,
       document_number: v.documentNumber,
       status: v.status,
       issue_date: v.issueDate,

@@ -94,6 +94,7 @@ const customerDetailsSchema = z.object({
 
 export const documentSchema = z.object({
   documentType: z.enum(["invoice", "receipt"]),
+  documentTitle: z.string().trim().min(1, "Document heading is required").max(60),
   documentNumber: z.string().trim().min(1, "Document number is required").max(60),
   status: z.string().trim().min(1).max(30),
   issueDate: z.string().min(1, "Issue date is required"),

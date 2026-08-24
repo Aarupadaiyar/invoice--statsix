@@ -56,6 +56,7 @@ export async function POST(req: NextRequest) {
       user_id: user.id,
       customer_id: v.customerId || null,
       document_type: v.documentType,
+      document_title: v.documentTitle,
       document_number: v.documentNumber,
       status: v.status,
       issue_date: v.issueDate,

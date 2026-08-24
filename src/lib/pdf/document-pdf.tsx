@@ -121,14 +121,14 @@ function money(amount: number, currency: string) {
 export function DocumentPdf({ doc }: { doc: DocumentRecord }) {
   const totals = calcDocumentTotals(doc.lineItems, doc.extraCharge);
   const isInvoice = doc.documentType === "invoice";
-  const title = isInvoice ? "INVOICE" : "RECEIPT";
+  const title = (doc.documentTitle || (isInvoice ? "Invoice" : "Receipt")).toUpperCase();
   const balanceDue = Math.max(0, totals.total - doc.amountPaid);
   const b = doc.businessDetails;
   const c = doc.customerDetails;
   const hasPaymentInfo = Boolean(b.bankName || b.accountNumber || b.upiId || b.paymentLink);
 
   return (
-    <Document title={`${title === "INVOICE" ? "Invoice" : "Receipt"}-${doc.documentNumber}`}>
+    <Document title={`${isInvoice ? "Invoice" : "Receipt"}-${doc.documentNumber}`}>
       <Page size="A4" style={styles.page} wrap>
         <View style={styles.headerRow}>
           <View style={{ maxWidth: 280 }}>

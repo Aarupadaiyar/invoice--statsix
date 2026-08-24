@@ -28,6 +28,7 @@ export async function POST(_req: NextRequest, { params }: { params: Promise<{ id
       user_id: user.id,
       customer_id: source.customer_id,
       document_type: source.document_type,
+      document_title: source.document_title,
       document_number: newNumber,
       status: "draft",
       issue_date: today,

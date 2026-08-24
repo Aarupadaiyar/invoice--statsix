@@ -29,7 +29,9 @@ export function DocumentPreview({ doc }: { doc: DocumentInput }) {
           </div>
 
           <div className="text-right">
-            <p className="text-2xl font-bold tracking-wide text-accent">{isInvoice ? "INVOICE" : "RECEIPT"}</p>
+            <p className="text-2xl font-bold tracking-wide text-accent">
+              {(doc.documentTitle || (isInvoice ? "Invoice" : "Receipt")).toUpperCase()}
+            </p>
             <p className="font-semibold mt-1">{doc.documentNumber || "—"}</p>
             <div className="mt-2 text-xs space-y-0.5">
               <p>

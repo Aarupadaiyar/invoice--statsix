@@ -72,6 +72,7 @@ create table if not exists public.documents (
   user_id          uuid not null references auth.users(id) on delete cascade,
   customer_id      uuid references public.customers(id) on delete set null,
   document_type    text not null check (document_type in ('invoice', 'receipt')),
+  document_title   text not null default '',
   document_number  text not null,
   status           text not null,
   issue_date       date not null,
@@ -95,6 +96,9 @@ create table if not exists public.documents (
   updated_at       timestamptz not null default now(),
   unique (user_id, document_type, document_number)
 );
+
+-- Safe to re-run: adds the column for databases created before document_title existed.
+alter table public.documents add column if not exists document_title text not null default '';
 
 create index if not exists documents_user_id_idx on public.documents(user_id);
 create index if not exists documents_user_type_idx on public.documents(user_id, document_type);
