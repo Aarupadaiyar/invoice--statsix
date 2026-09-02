@@ -82,6 +82,7 @@ export type CustomerRecord = {
   billingAddress: string;
   shippingAddress: string;
   taxId: string;
+  logoDataUrl: string;
   createdAt: string;
   updatedAt: string;
 };
@@ -96,6 +97,7 @@ export function toCustomerRecord(row: CustomerRow): CustomerRecord {
     billingAddress: row.billing_address,
     shippingAddress: row.shipping_address,
     taxId: row.tax_id,
+    logoDataUrl: row.logo_data_url,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };

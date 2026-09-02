@@ -43,6 +43,7 @@ export async function POST(req: NextRequest) {
       billing_address: v.billingAddress,
       shipping_address: v.shippingAddress,
       tax_id: v.taxId,
+      logo_data_url: v.logoDataUrl,
     })
     .select("*")
     .single();

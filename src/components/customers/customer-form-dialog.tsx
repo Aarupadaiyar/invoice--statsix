@@ -6,6 +6,7 @@ import type { CustomerRecord } from "@/lib/data/mappers";
 import { api } from "@/lib/api-client";
 import { useToast } from "@/components/toast";
 import { inputClass, labelClass, btnPrimary, btnSecondary } from "@/lib/ui";
+import { LogoUpload } from "@/components/logo-upload";
 
 export type CustomerFormValues = Omit<CustomerRecord, "id" | "createdAt" | "updatedAt">;
 
@@ -17,6 +18,7 @@ const EMPTY: CustomerFormValues = {
   billingAddress: "",
   shippingAddress: "",
   taxId: "",
+  logoDataUrl: "",
 };
 
 export function CustomerFormDialog({
@@ -72,6 +74,10 @@ export function CustomerFormDialog({
           </button>
         </div>
         <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4 max-h-[70vh] overflow-y-auto">
+          <div>
+            <label className={labelClass}>Logo (optional)</label>
+            <LogoUpload value={values.logoDataUrl} onChange={(v) => set("logoDataUrl", v)} />
+          </div>
           <div className="grid sm:grid-cols-2 gap-4">
             <div>
               <label className={labelClass}>Name *</label>

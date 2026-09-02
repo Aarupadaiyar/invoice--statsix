@@ -46,9 +46,13 @@ create table if not exists public.customers (
   billing_address  text not null default '',
   shipping_address text not null default '',
   tax_id           text not null default '',
+  logo_data_url    text not null default '',
   created_at       timestamptz not null default now(),
   updated_at       timestamptz not null default now()
 );
+
+-- Safe to re-run: adds the column for databases created before customer logos existed.
+alter table public.customers add column if not exists logo_data_url text not null default '';
 
 create index if not exists customers_user_id_idx on public.customers(user_id);
 

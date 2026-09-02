@@ -64,15 +64,21 @@ export function DocumentPreview({ doc }: { doc: DocumentInput }) {
         </div>
 
         <div className="flex flex-wrap justify-between gap-6 mb-8">
-          <div className="max-w-[280px]">
-            <p className="text-xs font-semibold uppercase tracking-wide text-black/40 mb-1.5">
-              {isInvoice ? "Bill To" : "Received From / Customer"}
-            </p>
-            <p className="font-semibold">{c.name || "Customer name"}</p>
-            {c.company ? <p className="text-black/50 text-xs">{c.company}</p> : null}
-            {c.billingAddress ? <p className="text-black/50 text-xs whitespace-pre-line">{c.billingAddress}</p> : null}
-            {c.email || c.phone ? <p className="text-black/50 text-xs">{[c.email, c.phone].filter(Boolean).join("  •  ")}</p> : null}
-            {c.taxId ? <p className="text-black/50 text-xs">Tax ID: {c.taxId}</p> : null}
+          <div className="max-w-[280px] flex gap-3">
+            {c.logoDataUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={c.logoDataUrl} alt="Customer logo" className="h-10 w-10 object-contain shrink-0 rounded" />
+            ) : null}
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wide text-black/40 mb-1.5">
+                {isInvoice ? "Bill To" : "Received From / Customer"}
+              </p>
+              <p className="font-semibold">{c.name || "Customer name"}</p>
+              {c.company ? <p className="text-black/50 text-xs">{c.company}</p> : null}
+              {c.billingAddress ? <p className="text-black/50 text-xs whitespace-pre-line">{c.billingAddress}</p> : null}
+              {c.email || c.phone ? <p className="text-black/50 text-xs">{[c.email, c.phone].filter(Boolean).join("  •  ")}</p> : null}
+              {c.taxId ? <p className="text-black/50 text-xs">Tax ID: {c.taxId}</p> : null}
+            </div>
           </div>
           {isInvoice && c.shippingAddress ? (
             <div className="max-w-[280px]">

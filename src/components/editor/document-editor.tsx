@@ -5,7 +5,14 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Save, Download, Printer, Loader2, Info } from "lucide-react";
 import type { DocumentType, ExtraCharge, LineItem } from "@/types/document";
-import { emptyLineItem, PAYMENT_METHODS, CURRENCIES, DOCUMENT_TITLE_PRESETS, defaultDocumentTitle } from "@/types/document";
+import {
+  emptyLineItem,
+  emptyCustomerDetails,
+  PAYMENT_METHODS,
+  CURRENCIES,
+  DOCUMENT_TITLE_PRESETS,
+  defaultDocumentTitle,
+} from "@/types/document";
 import type { BusinessProfileRecord, CustomerRecord } from "@/lib/data/mappers";
 import { documentSchema, type DocumentInput } from "@/lib/validation";
 import { api, ApiError } from "@/lib/api-client";
@@ -77,7 +84,7 @@ function buildInitialValue(opts: {
       upiId: opts.profile.upiId,
       paymentLink: opts.profile.paymentLink,
     },
-    customerDetails: { name: "", company: "", email: "", phone: "", billingAddress: "", shippingAddress: "", taxId: "" },
+    customerDetails: emptyCustomerDetails(),
     lineItems: [emptyLineItem()],
     extraCharge: { discountType: "flat", discountValue: 0, extraTax: 0, shipping: 0 },
     amountPaid: 0,

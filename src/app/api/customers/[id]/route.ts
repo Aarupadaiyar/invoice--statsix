@@ -37,6 +37,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
       billing_address: v.billingAddress,
       shipping_address: v.shippingAddress,
       tax_id: v.taxId,
+      logo_data_url: v.logoDataUrl,
     })
     .eq("user_id", user.id)
     .eq("id", id)

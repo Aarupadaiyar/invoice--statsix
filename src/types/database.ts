@@ -47,6 +47,7 @@ export type Database = {
           billing_address: string;
           shipping_address: string;
           tax_id: string;
+          logo_data_url: string;
           created_at: string;
           updated_at: string;
         };

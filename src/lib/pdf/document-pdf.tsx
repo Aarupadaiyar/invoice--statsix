@@ -46,6 +46,8 @@ const styles = StyleSheet.create({
   },
   partiesRow: { flexDirection: "row", justifyContent: "space-between", marginBottom: 20 },
   partyBlock: { width: "48%" },
+  partyBlockRow: { width: "48%", flexDirection: "row" },
+  partyLogo: { width: 32, height: 32, objectFit: "contain", borderRadius: 3, marginRight: 8 },
   partyLabel: { fontSize: 8, color: COLORS.muted, textTransform: "uppercase", letterSpacing: 0.6, marginBottom: 5 },
   partyName: { fontSize: 11, fontWeight: 700, marginBottom: 2 },
   table: { marginBottom: 16, borderTop: `1pt solid ${COLORS.border}` },
@@ -172,13 +174,17 @@ export function DocumentPdf({ doc }: { doc: DocumentRecord }) {
         </View>
 
         <View style={styles.partiesRow}>
-          <View style={styles.partyBlock}>
-            <Text style={styles.partyLabel}>{isInvoice ? "Bill To" : "Received From / Customer"}</Text>
-            <Text style={styles.partyName}>{c.name || "Customer"}</Text>
-            {c.company ? <Text style={styles.mutedLine}>{c.company}</Text> : null}
-            {c.billingAddress ? <Text style={styles.mutedLine}>{c.billingAddress}</Text> : null}
-            {(c.email || c.phone) ? <Text style={styles.mutedLine}>{[c.email, c.phone].filter(Boolean).join("  •  ")}</Text> : null}
-            {c.taxId ? <Text style={styles.mutedLine}>Tax ID: {c.taxId}</Text> : null}
+          <View style={c.logoDataUrl ? styles.partyBlockRow : styles.partyBlock}>
+            {/* eslint-disable-next-line jsx-a11y/alt-text -- @react-pdf/renderer's Image has no alt prop */}
+            {c.logoDataUrl ? <Image src={c.logoDataUrl} style={styles.partyLogo} /> : null}
+            <View>
+              <Text style={styles.partyLabel}>{isInvoice ? "Bill To" : "Received From / Customer"}</Text>
+              <Text style={styles.partyName}>{c.name || "Customer"}</Text>
+              {c.company ? <Text style={styles.mutedLine}>{c.company}</Text> : null}
+              {c.billingAddress ? <Text style={styles.mutedLine}>{c.billingAddress}</Text> : null}
+              {(c.email || c.phone) ? <Text style={styles.mutedLine}>{[c.email, c.phone].filter(Boolean).join("  •  ")}</Text> : null}
+              {c.taxId ? <Text style={styles.mutedLine}>Tax ID: {c.taxId}</Text> : null}
+            </View>
           </View>
           {isInvoice && c.shippingAddress ? (
             <View style={styles.partyBlock}>

@@ -5,6 +5,7 @@ import { UserSearch } from "lucide-react";
 import type { CustomerRecord } from "@/lib/data/mappers";
 import type { CustomerDetails } from "@/types/document";
 import { inputClass, labelClass } from "@/lib/ui";
+import { LogoUpload } from "@/components/logo-upload";
 
 export function CustomerPicker({
   customers,
@@ -71,6 +72,7 @@ export function CustomerPicker({
                   billingAddress: selected.billingAddress,
                   shippingAddress: selected.shippingAddress,
                   taxId: selected.taxId,
+                  logoDataUrl: selected.logoDataUrl,
                 });
               }}
             >
@@ -84,6 +86,11 @@ export function CustomerPicker({
           </div>
         </div>
       ) : null}
+
+      <div className="mb-4">
+        <label className={labelClass}>Logo (optional)</label>
+        <LogoUpload value={details.logoDataUrl} onChange={(v) => set("logoDataUrl", v)} />
+      </div>
 
       <div className="grid sm:grid-cols-2 gap-4">
         <div>

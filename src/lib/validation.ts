@@ -46,6 +46,7 @@ export const customerSchema = z.object({
   billingAddress: z.string().trim().max(1000).default(""),
   shippingAddress: z.string().trim().max(1000).default(""),
   taxId: z.string().trim().max(100).default(""),
+  logoDataUrl: z.string().max(2_000_000).default(""),
 });
 
 const lineItemSchema = z.object({
@@ -90,6 +91,7 @@ const customerDetailsSchema = z.object({
   billingAddress: z.string().max(1000).default(""),
   shippingAddress: z.string().max(1000).default(""),
   taxId: z.string().max(100).default(""),
+  logoDataUrl: z.string().max(2_000_000).default(""),
 });
 
 export const documentSchema = z.object({

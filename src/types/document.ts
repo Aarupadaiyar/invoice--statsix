@@ -50,6 +50,7 @@ export type CustomerDetails = {
   billingAddress: string;
   shippingAddress: string;
   taxId: string;
+  logoDataUrl: string;
 };
 
 export type ExtraCharge = {
@@ -136,6 +137,7 @@ export function emptyCustomerDetails(): CustomerDetails {
     billingAddress: "",
     shippingAddress: "",
     taxId: "",
+    logoDataUrl: "",
   };
 }
 
