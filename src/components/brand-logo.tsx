@@ -6,7 +6,7 @@ export function BrandLogo({ height = 22 }: { height?: number }) {
   const width = Math.round(height * LOGO_ASPECT_RATIO);
   return (
     <Image
-      src="/logo.png"
+      src="/logo.jpg"
       alt="Statsix Invoice"
       width={width}
       height={height}
