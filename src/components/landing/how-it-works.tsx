@@ -14,7 +14,7 @@ const STEPS = [
   {
     step: "03",
     title: "Save and send",
-    body: "Download a real A4 PDF or print it directly, then track its status — draft, sent, paid — from your dashboard.",
+    body: "Download a real A4 PDF or print it directly, then track its status (draft, sent, or paid) from your dashboard.",
   },
 ];
 

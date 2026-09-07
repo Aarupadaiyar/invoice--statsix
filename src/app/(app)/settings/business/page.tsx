@@ -17,7 +17,7 @@ export default async function BusinessSettingsPage() {
       <div className="mb-6">
         <h1 className="text-2xl font-semibold">Business Profile</h1>
         <p className="text-sm text-black/50 mt-1">
-          Save your company details once — they&apos;ll auto-fill every new invoice and receipt.
+          Save your company details once, and they&apos;ll automatically fill every new invoice and receipt.
         </p>
       </div>
       <BusinessProfileForm initialProfile={profile} />

@@ -3,7 +3,7 @@ import { HeroMockup } from "@/components/landing/hero-mockup";
 
 export function Hero() {
   return (
-    <section className="pt-36 pb-20 sm:pt-44 sm:pb-28 px-4">
+    <section className="pt-28 pb-20 sm:pt-36 sm:pb-28 px-4">
       <div className="mx-auto max-w-6xl grid lg:grid-cols-2 gap-12 items-center">
         <div>
           <h1
@@ -18,22 +18,16 @@ export function Hero() {
             print ready PDFs every time.
           </p>
 
-          <div className="mt-8 flex flex-wrap items-center gap-3">
+          <div className="mt-8">
             <Link
               href="/signup"
-              className="rounded-full bg-accent px-6 py-3 text-base font-semibold text-white hover:opacity-90 active:scale-[0.98] transition-all duration-300"
+              className="inline-flex rounded-full bg-accent px-6 py-3 text-base font-semibold text-white hover:opacity-90 active:scale-[0.98] transition-all duration-300"
             >
               Start free
             </Link>
-            <Link
-              href="/login"
-              className="rounded-full border border-black/10 px-6 py-3 text-base font-semibold hover:bg-black/5 active:scale-[0.98] transition-all duration-300"
-            >
-              Log in
-            </Link>
           </div>
 
-          <p className="mt-5 text-sm text-black/40">No credit card required — create your first invoice in under 2 minutes.</p>
+          <p className="mt-5 text-sm text-black/40">No credit card required. Create your first invoice in under 2 minutes.</p>
         </div>
 
         <HeroMockup />

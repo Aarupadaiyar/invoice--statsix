@@ -5,7 +5,7 @@ const BENEFITS = [
   {
     icon: Zap,
     title: "Get paid faster",
-    body: "Polished, branded invoices that make it obvious what's owed and by when — no more chasing clarifications.",
+    body: "Polished, branded invoices that make it obvious what's owed and by when, so there's no more chasing clarifications.",
   },
   {
     icon: RefreshCw,

@@ -16,7 +16,7 @@ export default async function CustomersPage() {
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
       <div className="mb-6">
         <h1 className="text-2xl font-semibold">Customers</h1>
-        <p className="text-sm text-black/50 mt-1">Manage your customer list — select any of them when creating a document.</p>
+        <p className="text-sm text-black/50 mt-1">Manage your customer list, and select any of them when creating a document.</p>
       </div>
       <CustomersManager initialCustomers={customers} />
     </div>

@@ -33,8 +33,7 @@ export function LandingFooter() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr] gap-10">
           <div>
             <Link href="/" className="flex items-center gap-2 font-semibold mb-3">
-              <BrandLogo size={24} />
-              Statsix Invoice
+              <BrandLogo height={22} />
             </Link>
             <p className="text-sm text-black/50 max-w-xs">
               Professional invoices and receipts for freelancers and small businesses, with real PDF exports every

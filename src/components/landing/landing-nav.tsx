@@ -15,36 +15,30 @@ export function LandingNav() {
 
   return (
     <>
-      <header className="fixed top-0 inset-x-0 z-50 flex justify-center px-4">
-        <nav className="mt-6 w-max max-w-[calc(100vw-2rem)] rounded-full border border-black/5 bg-white/80 backdrop-blur-xl shadow-[0_1px_2px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.06)] px-2 py-2 flex items-center gap-1 whitespace-nowrap transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]">
-          <Link href="/" className="flex items-center gap-2 pl-2 pr-3 font-semibold shrink-0">
-            <BrandLogo size={24} />
-            <span className="hidden lg:inline">Statsix Invoice</span>
+      <header className="fixed top-0 inset-x-0 z-50 px-4 sm:px-6">
+        <nav className="mx-auto mt-4 max-w-6xl h-16 rounded-full border border-black/5 bg-white/80 backdrop-blur-xl shadow-[0_1px_2px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.06)] px-4 sm:px-6 flex items-center justify-between transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]">
+          <Link href="/" className="flex items-center shrink-0">
+            <BrandLogo height={26} />
           </Link>
 
-          <div className="hidden md:flex items-center gap-1 px-2">
+          <div className="hidden md:flex items-center gap-1">
             {LINKS.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
-                className="shrink-0 rounded-full px-3 py-1.5 text-sm font-medium text-black/60 hover:text-black hover:bg-black/5 transition-colors duration-300"
+                className="rounded-full px-3 py-1.5 text-sm font-medium text-black/60 hover:text-black hover:bg-black/5 transition-colors duration-300"
               >
                 {link.label}
               </a>
             ))}
           </div>
 
-          <div className="hidden md:flex items-center gap-1 pl-2 border-l border-black/5">
-            <Link href="/login" className="shrink-0 rounded-full px-3 py-1.5 text-sm font-semibold text-black/70 hover:bg-black/5 transition-colors duration-300">
-              Log in
-            </Link>
-            <Link
-              href="/signup"
-              className="shrink-0 rounded-full bg-accent px-4 py-1.5 text-sm font-semibold text-white hover:opacity-90 active:scale-[0.98] transition-all duration-300"
-            >
-              Start free
-            </Link>
-          </div>
+          <Link
+            href="/login"
+            className="hidden md:inline-flex rounded-full bg-accent px-5 py-2 text-sm font-semibold text-white hover:opacity-90 active:scale-[0.98] transition-all duration-300"
+          >
+            Log in
+          </Link>
 
           <button
             onClick={() => setOpen((v) => !v)}
@@ -85,23 +79,16 @@ export function LandingNav() {
               {link.label}
             </a>
           ))}
-          <div
-            className={`flex flex-col items-center gap-3 mt-6 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+          <Link
+            href="/login"
+            onClick={() => setOpen(false)}
+            className={`mt-6 rounded-full bg-accent px-6 py-2.5 text-base font-semibold text-white transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] ${
               open ? "translate-y-0 opacity-100" : "translate-y-12 opacity-0"
             }`}
             style={{ transitionDelay: open ? "260ms" : "0ms" }}
           >
-            <Link href="/login" onClick={() => setOpen(false)} className="text-base font-semibold text-black/70">
-              Log in
-            </Link>
-            <Link
-              href="/signup"
-              onClick={() => setOpen(false)}
-              className="rounded-full bg-accent px-6 py-2.5 text-base font-semibold text-white"
-            >
-              Start free
-            </Link>
-          </div>
+            Log in
+          </Link>
         </div>
       </div>
     </>

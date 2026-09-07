@@ -12,18 +12,12 @@ export function FinalCta() {
           <p className="mt-4 text-white/80 max-w-md mx-auto text-pretty">
             No credit card, no setup call. Just your business details and your first customer.
           </p>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+          <div className="mt-8">
             <Link
               href="/signup"
-              className="rounded-full bg-white px-6 py-3 text-base font-semibold text-accent hover:opacity-90 active:scale-[0.98] transition-all duration-300"
+              className="inline-flex rounded-full bg-white px-6 py-3 text-base font-semibold text-accent hover:opacity-90 active:scale-[0.98] transition-all duration-300"
             >
               Start free
-            </Link>
-            <Link
-              href="/login"
-              className="rounded-full border border-white/30 px-6 py-3 text-base font-semibold text-white hover:bg-white/10 active:scale-[0.98] transition-all duration-300"
-            >
-              Log in
             </Link>
           </div>
         </div>

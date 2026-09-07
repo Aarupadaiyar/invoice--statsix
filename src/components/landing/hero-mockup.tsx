@@ -27,7 +27,7 @@ export function HeroMockup() {
         <div className="space-y-2 mb-4">
           {[
             { label: "Brand identity package", amount: "$1,850.00" },
-            { label: "Website copy — 6 pages", amount: "$940.00" },
+            { label: "Website copy (6 pages)", amount: "$940.00" },
             { label: "Revisions round", amount: "$424.50" },
           ].map((row) => (
             <div key={row.label} className="flex items-center justify-between text-xs">

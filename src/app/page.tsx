@@ -7,16 +7,17 @@ import { TaglineSection } from "@/components/landing/tagline-section";
 import { Benefits } from "@/components/landing/benefits";
 import { HowItWorks } from "@/components/landing/how-it-works";
 import { FeatureShowcase } from "@/components/landing/feature-showcase";
+import { Mission } from "@/components/landing/mission";
 import { Faq } from "@/components/landing/faq";
 import { FinalCta } from "@/components/landing/final-cta";
 import { LandingFooter } from "@/components/landing/footer";
 
 export const metadata: Metadata = {
-  title: "Statsix Invoice — Create Professional Invoices & Receipts",
+  title: "Statsix Invoice: Create Professional Invoices & Receipts",
   description:
     "Build polished invoices and receipts in minutes, save your business details once, and download real, print ready PDFs every time.",
   openGraph: {
-    title: "Statsix Invoice — Create Professional Invoices & Receipts",
+    title: "Statsix Invoice: Create Professional Invoices & Receipts",
     description:
       "Build polished invoices and receipts in minutes, save your business details once, and download real, print ready PDFs every time.",
     type: "website",
@@ -45,6 +46,7 @@ export default async function Home() {
         <Benefits />
         <HowItWorks />
         <FeatureShowcase />
+        <Mission />
         <Faq />
         <FinalCta />
       </main>

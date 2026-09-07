@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { BrandLogo } from "@/components/brand-logo";
 
 export const metadata: Metadata = {
-  title: "Terms of Service — Statsix Invoice",
+  title: "Statsix Invoice Terms of Service",
   description: "The terms that apply when you use Statsix Invoice.",
 };
 
@@ -13,8 +13,7 @@ export default function TermsPage() {
       <header className="border-b border-black/5 bg-white">
         <div className="mx-auto max-w-3xl px-6 py-4">
           <Link href="/" className="flex items-center gap-2 font-semibold">
-            <BrandLogo size={24} />
-            Statsix Invoice
+            <BrandLogo height={22} />
           </Link>
         </div>
       </header>

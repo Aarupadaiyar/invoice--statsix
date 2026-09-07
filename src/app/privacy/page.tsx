@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { BrandLogo } from "@/components/brand-logo";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — Statsix Invoice",
+  title: "Statsix Invoice Privacy Policy",
   description: "How Statsix Invoice collects, stores, and protects your data.",
 };
 
@@ -13,8 +13,7 @@ export default function PrivacyPage() {
       <header className="border-b border-black/5 bg-white">
         <div className="mx-auto max-w-3xl px-6 py-4">
           <Link href="/" className="flex items-center gap-2 font-semibold">
-            <BrandLogo size={24} />
-            Statsix Invoice
+            <BrandLogo height={22} />
           </Link>
         </div>
       </header>
@@ -28,9 +27,9 @@ export default function PrivacyPage() {
             <h2 className="text-lg font-semibold text-black mb-2">What we collect</h2>
             <p>
               When you create an account we store your email address and the business, customer, and document data
-              you enter — business name, logo, tax and payment details, customer contacts, and the invoices and
-              receipts you build. We do not collect this information for any purpose beyond running the product for
-              you.
+              you enter, including business name, logo, tax and payment details, customer contacts, and the invoices
+              and receipts you build. We do not collect this information for any purpose beyond running the product
+              for you.
             </p>
           </section>
 

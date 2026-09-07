@@ -315,7 +315,7 @@ export function DocumentEditor({
                   ))}
                 </datalist>
                 <p className="mt-1 text-xs text-black/40">
-                  Shown as the big title on the document — e.g. &quot;Proforma Invoice&quot;, &quot;Tax Invoice&quot;, &quot;Quote&quot;.
+                  Shown as the big title on the document, for example &quot;Proforma Invoice&quot;, &quot;Tax Invoice&quot;, or &quot;Quote&quot;.
                 </p>
               </div>
               <div>

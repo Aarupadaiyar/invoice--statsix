@@ -1,13 +1,16 @@
 import Image from "next/image";
 
-export function BrandLogo({ size = 28 }: { size?: number }) {
+const LOGO_ASPECT_RATIO = 773 / 230;
+
+export function BrandLogo({ height = 22 }: { height?: number }) {
+  const width = Math.round(height * LOGO_ASPECT_RATIO);
   return (
     <Image
       src="/logo.png"
       alt="Statsix Invoice"
-      width={size}
-      height={size}
-      className="rounded-md object-cover shrink-0"
+      width={width}
+      height={height}
+      className="object-contain shrink-0"
       priority
     />
   );

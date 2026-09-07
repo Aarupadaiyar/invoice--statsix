@@ -26,9 +26,8 @@ export function AppShell({ email, children }: { email: string; children: React.R
         }`}
       >
         <div className="h-16 flex items-center justify-between px-5 border-b border-black/5">
-          <Link href="/dashboard" className="flex items-center gap-2 font-semibold">
-            <BrandLogo />
-            Statsix Invoice
+          <Link href="/dashboard" className="flex items-center font-semibold">
+            <BrandLogo height={26} />
           </Link>
           <button className="lg:hidden" onClick={() => setMobileOpen(false)}>
             <X className="size-5" />
@@ -83,7 +82,7 @@ export function AppShell({ email, children }: { email: string; children: React.R
           <button onClick={() => setMobileOpen(true)}>
             <Menu className="size-5" />
           </button>
-          <span className="font-semibold">Statsix Invoice</span>
+          <BrandLogo height={24} />
         </header>
         <main className="flex-1 min-w-0">{children}</main>
       </div>

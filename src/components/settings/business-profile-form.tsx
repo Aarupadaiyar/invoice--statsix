@@ -110,12 +110,12 @@ export function BusinessProfileForm({ initialProfile }: { initialProfile: Busine
         </Field>
       </Section>
 
-      <Section title="Defaults" description="Applied automatically to every new document — you can still edit per-document.">
+      <Section title="Defaults" description="Applied automatically to every new document. You can still edit per document.">
         <Field label="Default currency">
           <select className={inputClass} value={profile.defaultCurrency} onChange={(e) => set("defaultCurrency", e.target.value)}>
             {CURRENCIES.map((c) => (
               <option key={c.code} value={c.code}>
-                {c.code} — {c.label}
+                {c.code} ({c.label})
               </option>
             ))}
           </select>

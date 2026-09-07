@@ -85,7 +85,7 @@ const FEATURES = [
   {
     eyebrow: "Live preview",
     title: "Watch the document take shape as you type",
-    body: "The editor and preview sit side by side. Add a line item, change a tax rate, or swap a currency — the total on the right updates instantly, with the exact layout your client will see.",
+    body: "The editor and preview sit side by side. Add a line item, change a tax rate, or swap a currency, and the total on the right updates instantly, with the exact layout your client will see.",
     Visual: LivePreviewVisual,
   },
   {
@@ -97,7 +97,7 @@ const FEATURES = [
   {
     eyebrow: "Business profile",
     title: "Enter your payment details once",
-    body: "Bank name, account number, IFSC, UPI ID, or a payment link — save them to your profile and they show up automatically on every invoice and receipt you create.",
+    body: "Bank name, account number, IFSC, UPI ID, or a payment link: save them to your profile and they show up automatically on every invoice and receipt you create.",
     Visual: ProfileVisual,
   },
   {
