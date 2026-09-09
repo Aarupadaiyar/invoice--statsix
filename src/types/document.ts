@@ -11,7 +11,18 @@ export function defaultDocumentTitle(type: DocumentType): string {
 }
 
 export const DOCUMENT_TITLE_PRESETS: Record<DocumentType, string[]> = {
-  invoice: ["Invoice", "Tax Invoice", "Proforma Invoice", "Quote", "Estimate", "Credit Note"],
+  invoice: [
+    "Invoice",
+    "Tax Invoice",
+    "Proforma Invoice",
+    "Quotation",
+    "Quote",
+    "Estimate",
+    "Estimation Bill",
+    "Credit Note",
+    "Sales Order",
+    "Delivery Challan",
+  ],
   receipt: ["Receipt", "Payment Receipt", "Cash Receipt", "Sales Receipt"],
 };
 
