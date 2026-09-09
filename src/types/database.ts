@@ -28,6 +28,9 @@ export type Database = {
           swift_code: string;
           upi_id: string;
           payment_link: string;
+          state: string;
+          signature_data_url: string;
+          authorized_signatory: string;
           created_at: string;
           updated_at: string;
         };
@@ -73,6 +76,7 @@ export type Database = {
           payment_date: string | null;
           payment_method: string | null;
           currency: string;
+          place_of_supply: string;
           business_details: Json;
           customer_details: Json;
           line_items: Json;

@@ -35,6 +35,9 @@ export const businessProfileSchema = z.object({
   swiftCode: z.string().trim().max(50).default(""),
   upiId: z.string().trim().max(100).default(""),
   paymentLink: z.string().trim().max(500).default(""),
+  state: z.string().trim().max(100).default(""),
+  signatureDataUrl: z.string().max(2_000_000).default(""),
+  authorizedSignatory: z.string().trim().max(200).default(""),
 });
 
 export const customerSchema = z.object({
@@ -54,6 +57,8 @@ const lineItemSchema = z.object({
   id: z.string(),
   name: z.string().trim().max(300).default(""),
   description: z.string().trim().max(3000).default(""),
+  hsnSac: z.string().trim().max(20).default(""),
+  unit: z.string().trim().max(20).default(""),
   quantity: z.number().finite().default(0),
   rate: z.number().finite().default(0),
   discount: z.number().finite().default(0),
@@ -83,6 +88,9 @@ const businessDetailsSchema = z.object({
   swiftCode: z.string().max(50).default(""),
   upiId: z.string().max(100).default(""),
   paymentLink: z.string().max(500).default(""),
+  state: z.string().max(100).default(""),
+  signatureDataUrl: z.string().max(2_000_000).default(""),
+  authorizedSignatory: z.string().max(200).default(""),
 });
 
 const customerDetailsSchema = z.object({
@@ -106,6 +114,7 @@ export const documentSchema = z.object({
   paymentDate: z.string().nullable().optional(),
   paymentMethod: z.string().nullable().optional(),
   currency: z.string().trim().min(1).max(10),
+  placeOfSupply: z.string().trim().max(100).default(""),
   customerId: z.string().nullable().optional(),
   businessDetails: businessDetailsSchema,
   customerDetails: customerDetailsSchema,

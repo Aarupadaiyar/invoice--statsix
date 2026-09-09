@@ -55,6 +55,9 @@ export async function PUT(req: NextRequest) {
         swift_code: v.swiftCode,
         upi_id: v.upiId,
         payment_link: v.paymentLink,
+        state: v.state,
+        signature_data_url: v.signatureDataUrl,
+        authorized_signatory: v.authorizedSignatory,
       },
       { onConflict: "user_id" },
     )

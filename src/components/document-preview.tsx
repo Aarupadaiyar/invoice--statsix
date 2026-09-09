@@ -1,6 +1,7 @@
 import type { DocumentInput } from "@/lib/validation";
-import { calcDocumentTotals, calcLineTotal, formatCurrency } from "@/lib/calc";
+import { calcDocumentTotals, calcGstSplit, calcLineTotal, formatCurrency } from "@/lib/calc";
 import { formatDate, statusLabel } from "@/lib/format";
+import { amountToWords } from "@/lib/number-to-words";
 
 export function DocumentPreview({ doc }: { doc: DocumentInput }) {
   const totals = calcDocumentTotals(doc.lineItems, doc.extraCharge);
@@ -9,6 +10,8 @@ export function DocumentPreview({ doc }: { doc: DocumentInput }) {
   const c = doc.customerDetails;
   const balanceDue = Math.max(0, totals.total - (doc.amountPaid || 0));
   const hasPaymentInfo = Boolean(b.bankName || b.accountNumber || b.upiId || b.paymentLink);
+  const gst = calcGstSplit(totals.taxTotal, b.state, doc.placeOfSupply);
+  const hasHsnOrUnit = doc.lineItems.some((item) => item.hsnSac || item.unit);
 
   return (
     <div className="w-full max-w-[794px] mx-auto bg-white shadow-sm border border-black/5 text-[13px] text-[#1a1d23]">
@@ -59,6 +62,12 @@ export function DocumentPreview({ doc }: { doc: DocumentInput }) {
                   {statusLabel(doc.paymentMethod)}
                 </p>
               ) : null}
+              {doc.placeOfSupply ? (
+                <p>
+                  <span className="text-black/40">Place of Supply: </span>
+                  {doc.placeOfSupply}
+                </p>
+              ) : null}
             </div>
             <span className="inline-block mt-2 rounded-full bg-accent/10 text-accent text-xs font-semibold px-3 py-1 uppercase tracking-wide">
               {statusLabel(doc.status)}
@@ -96,7 +105,9 @@ export function DocumentPreview({ doc }: { doc: DocumentInput }) {
             <thead>
               <tr className="bg-black/[0.03] text-black/40 uppercase tracking-wide">
                 <th className="text-left font-semibold px-2 py-2">Item</th>
+                {hasHsnOrUnit ? <th className="text-left font-semibold px-2 py-2 w-16">HSN/SAC</th> : null}
                 <th className="text-right font-semibold px-2 py-2 w-14">Qty</th>
+                {hasHsnOrUnit ? <th className="text-left font-semibold px-2 py-2 w-12">Unit</th> : null}
                 <th className="text-right font-semibold px-2 py-2 w-20">Rate</th>
                 <th className="text-right font-semibold px-2 py-2 w-20">Discount</th>
                 <th className="text-right font-semibold px-2 py-2 w-14">Tax</th>
@@ -106,7 +117,7 @@ export function DocumentPreview({ doc }: { doc: DocumentInput }) {
             <tbody>
               {doc.lineItems.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-2 py-4 text-center text-black/30">
+                  <td colSpan={hasHsnOrUnit ? 8 : 6} className="px-2 py-4 text-center text-black/30">
                     No line items yet
                   </td>
                 </tr>
@@ -119,7 +130,9 @@ export function DocumentPreview({ doc }: { doc: DocumentInput }) {
                         <p className="text-black/40 text-[11px] mt-0.5 whitespace-pre-line break-words">{item.description}</p>
                       ) : null}
                     </td>
+                    {hasHsnOrUnit ? <td className="px-2 py-2 align-top text-black/60">{item.hsnSac || "—"}</td> : null}
                     <td className="px-2 py-2 text-right align-top tabular-nums">{item.quantity}</td>
+                    {hasHsnOrUnit ? <td className="px-2 py-2 align-top text-black/60">{item.unit || "—"}</td> : null}
                     <td className="px-2 py-2 text-right align-top tabular-nums">{formatCurrency(item.rate, doc.currency)}</td>
                     <td className="px-2 py-2 text-right align-top tabular-nums">
                       {item.discount ? formatCurrency(item.discount, doc.currency) : "—"}
@@ -147,7 +160,25 @@ export function DocumentPreview({ doc }: { doc: DocumentInput }) {
                 <span className="font-medium tabular-nums">-{formatCurrency(totals.discountTotal, doc.currency)}</span>
               </div>
             ) : null}
-            {totals.taxTotal > 0 ? (
+            {totals.taxTotal > 0 && gst.applicable ? (
+              gst.isIntraState ? (
+                <>
+                  <div className="flex justify-between py-1">
+                    <span className="text-black/40">CGST</span>
+                    <span className="font-medium tabular-nums">{formatCurrency(gst.cgst, doc.currency)}</span>
+                  </div>
+                  <div className="flex justify-between py-1">
+                    <span className="text-black/40">SGST</span>
+                    <span className="font-medium tabular-nums">{formatCurrency(gst.sgst, doc.currency)}</span>
+                  </div>
+                </>
+              ) : (
+                <div className="flex justify-between py-1">
+                  <span className="text-black/40">IGST</span>
+                  <span className="font-medium tabular-nums">{formatCurrency(gst.igst, doc.currency)}</span>
+                </div>
+              )
+            ) : totals.taxTotal > 0 ? (
               <div className="flex justify-between py-1">
                 <span className="text-black/40">Tax</span>
                 <span className="font-medium tabular-nums">{formatCurrency(totals.taxTotal, doc.currency)}</span>
@@ -185,6 +216,13 @@ export function DocumentPreview({ doc }: { doc: DocumentInput }) {
           </div>
         </div>
 
+        <div className="mb-6 text-right">
+          <p className="text-xs text-black/40">
+            <span className="font-semibold text-black/60">Amount in words: </span>
+            {amountToWords(totals.total, doc.currency)}
+          </p>
+        </div>
+
         {hasPaymentInfo ? (
           <div className="mb-6">
             <p className="text-xs font-semibold uppercase tracking-wide text-black/40 mb-1.5">Payment Information</p>
@@ -211,6 +249,23 @@ export function DocumentPreview({ doc }: { doc: DocumentInput }) {
           <div className="mb-2">
             <p className="text-xs font-semibold uppercase tracking-wide text-black/40 mb-1">Terms &amp; Conditions</p>
             <p className="text-xs text-black/60 whitespace-pre-line">{doc.terms}</p>
+          </div>
+        ) : null}
+
+        {b.signatureDataUrl || b.authorizedSignatory ? (
+          <div className="mt-8 flex justify-end">
+            <div className="text-center">
+              {b.signatureDataUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={b.signatureDataUrl} alt="Signature" className="h-14 max-w-[160px] object-contain mx-auto mb-1" />
+              ) : (
+                <div className="h-14" />
+              )}
+              <div className="w-40 border-t border-black/20 pt-1">
+                {b.authorizedSignatory ? <p className="text-xs font-medium">{b.authorizedSignatory}</p> : null}
+                <p className="text-[10px] text-black/40">Authorized Signatory</p>
+              </div>
+            </div>
           </div>
         ) : null}
 

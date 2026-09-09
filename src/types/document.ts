@@ -19,6 +19,8 @@ export type LineItem = {
   id: string;
   name: string;
   description: string;
+  hsnSac: string;
+  unit: string;
   quantity: number;
   rate: number;
   discount: number;
@@ -30,6 +32,7 @@ export type BusinessDetails = {
   logoDataUrl: string;
   billingAddress: string;
   shippingAddress: string;
+  state: string;
   phone: string;
   email: string;
   website: string;
@@ -41,6 +44,8 @@ export type BusinessDetails = {
   swiftCode: string;
   upiId: string;
   paymentLink: string;
+  signatureDataUrl: string;
+  authorizedSignatory: string;
 };
 
 export type CustomerDetails = {
@@ -70,6 +75,14 @@ export type DocumentTotals = {
   total: number;
 };
 
+export type GstSplit = {
+  applicable: boolean;
+  isIntraState: boolean;
+  cgst: number;
+  sgst: number;
+  igst: number;
+};
+
 export type DocumentRecord = {
   id: string;
   documentType: DocumentType;
@@ -81,6 +94,7 @@ export type DocumentRecord = {
   paymentDate: string | null;
   paymentMethod: PaymentMethod | null;
   currency: string;
+  placeOfSupply: string;
   businessDetails: BusinessDetails;
   customerDetails: CustomerDetails;
   customerId: string | null;
@@ -103,6 +117,8 @@ export function emptyLineItem(): LineItem {
     id: crypto.randomUUID(),
     name: "",
     description: "",
+    hsnSac: "",
+    unit: "",
     quantity: 1,
     rate: 0,
     discount: 0,
@@ -116,6 +132,7 @@ export function emptyBusinessDetails(): BusinessDetails {
     logoDataUrl: "",
     billingAddress: "",
     shippingAddress: "",
+    state: "",
     phone: "",
     email: "",
     website: "",
@@ -127,6 +144,8 @@ export function emptyBusinessDetails(): BusinessDetails {
     swiftCode: "",
     upiId: "",
     paymentLink: "",
+    signatureDataUrl: "",
+    authorizedSignatory: "",
   };
 }
 
@@ -171,3 +190,46 @@ export const PAYMENT_METHODS: { value: PaymentMethod; label: string }[] = [
   { value: "upi", label: "UPI" },
   { value: "other", label: "Other" },
 ];
+
+/** Indian states and union territories, for GST place-of-supply and business-state fields. */
+export const INDIAN_STATES = [
+  "Andaman and Nicobar Islands",
+  "Andhra Pradesh",
+  "Arunachal Pradesh",
+  "Assam",
+  "Bihar",
+  "Chandigarh",
+  "Chhattisgarh",
+  "Dadra and Nagar Haveli and Daman and Diu",
+  "Delhi",
+  "Goa",
+  "Gujarat",
+  "Haryana",
+  "Himachal Pradesh",
+  "Jammu and Kashmir",
+  "Jharkhand",
+  "Karnataka",
+  "Kerala",
+  "Ladakh",
+  "Lakshadweep",
+  "Madhya Pradesh",
+  "Maharashtra",
+  "Manipur",
+  "Meghalaya",
+  "Mizoram",
+  "Nagaland",
+  "Odisha",
+  "Puducherry",
+  "Punjab",
+  "Rajasthan",
+  "Sikkim",
+  "Tamil Nadu",
+  "Telangana",
+  "Tripura",
+  "Uttar Pradesh",
+  "Uttarakhand",
+  "West Bengal",
+] as const;
+
+/** Common units of measurement for GST line items. */
+export const UNIT_PRESETS = ["pcs", "nos", "hrs", "kg", "g", "ltr", "ml", "box", "set", "sqft", "sqm", "day", "month"] as const;

@@ -7,7 +7,7 @@ import { api } from "@/lib/api-client";
 import { useToast } from "@/components/toast";
 import { LogoUpload } from "@/components/logo-upload";
 import { inputClass, labelClass, btnPrimary, cardClass } from "@/lib/ui";
-import { CURRENCIES } from "@/types/document";
+import { CURRENCIES, INDIAN_STATES } from "@/types/document";
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
@@ -94,6 +94,16 @@ export function BusinessProfileForm({ initialProfile }: { initialProfile: Busine
               onChange={(e) => set("shippingAddress", e.target.value)}
             />
           </Field>
+          <Field label="State (for GST place of supply)">
+            <select className={inputClass} value={profile.state} onChange={(e) => set("state", e.target.value)}>
+              <option value="">Not applicable</option>
+              {INDIAN_STATES.map((s) => (
+                <option key={s} value={s}>
+                  {s}
+                </option>
+              ))}
+            </select>
+          </Field>
         </div>
       </div>
 
@@ -124,6 +134,24 @@ export function BusinessProfileForm({ initialProfile }: { initialProfile: Busine
           <input className={inputClass} value={profile.paymentLink} onChange={(e) => set("paymentLink", e.target.value)} />
         </Field>
       </Section>
+
+      <div className={`${cardClass} p-6`}>
+        <h2 className="font-semibold mb-1">Signature</h2>
+        <p className="text-sm text-black/40 mb-5">Shown at the bottom of every invoice and receipt PDF.</p>
+        <div className="mb-5">
+          <label className={labelClass}>Signature image (optional)</label>
+          <LogoUpload value={profile.signatureDataUrl} onChange={(v) => set("signatureDataUrl", v)} />
+        </div>
+        <div className="grid sm:grid-cols-2 gap-4">
+          <Field label="Authorized signatory name">
+            <input
+              className={inputClass}
+              value={profile.authorizedSignatory}
+              onChange={(e) => set("authorizedSignatory", e.target.value)}
+            />
+          </Field>
+        </div>
+      </div>
 
       <Section title="Defaults" description="Applied automatically to every new document. You can still edit per document.">
         <Field label="Default currency">

@@ -11,6 +11,7 @@ import {
   PAYMENT_METHODS,
   CURRENCIES,
   DOCUMENT_TITLE_PRESETS,
+  INDIAN_STATES,
   defaultDocumentTitle,
 } from "@/types/document";
 import type { BusinessProfileRecord, CustomerRecord } from "@/lib/data/mappers";
@@ -67,12 +68,14 @@ function buildInitialValue(opts: {
     paymentDate: opts.type === "receipt" ? today.toISOString().slice(0, 10) : null,
     paymentMethod: opts.type === "receipt" ? "cash" : null,
     currency: opts.profile.defaultCurrency || "USD",
+    placeOfSupply: "",
     customerId: null,
     businessDetails: {
       businessName: opts.profile.businessName,
       logoDataUrl: opts.profile.logoDataUrl,
       billingAddress: opts.profile.billingAddress,
       shippingAddress: opts.profile.shippingAddress,
+      state: opts.profile.state,
       phone: opts.profile.phone,
       email: opts.profile.email,
       website: opts.profile.website,
@@ -84,6 +87,8 @@ function buildInitialValue(opts: {
       swiftCode: opts.profile.swiftCode,
       upiId: opts.profile.upiId,
       paymentLink: opts.profile.paymentLink,
+      signatureDataUrl: opts.profile.signatureDataUrl,
+      authorizedSignatory: opts.profile.authorizedSignatory,
     },
     customerDetails: emptyCustomerDetails(),
     lineItems: [emptyLineItem()],
@@ -389,6 +394,22 @@ export function DocumentEditor({
                   ))}
                 </select>
               </div>
+              <div>
+                <label className={labelClass}>Place of supply (GST)</label>
+                <select
+                  className={inputClass}
+                  value={value.placeOfSupply ?? ""}
+                  onChange={(e) => set("placeOfSupply", e.target.value)}
+                >
+                  <option value="">Not applicable</option>
+                  {INDIAN_STATES.map((s) => (
+                    <option key={s} value={s}>
+                      {s}
+                    </option>
+                  ))}
+                </select>
+                <p className="mt-1 text-xs text-black/40">Splits tax into CGST + SGST or IGST based on your business state.</p>
+              </div>
             </div>
           </section>
 
@@ -439,6 +460,21 @@ export function DocumentEditor({
                   onChange={(e) => set("businessDetails", { ...value.businessDetails, taxId: e.target.value })}
                 />
               </div>
+              <div>
+                <label className={labelClass}>State</label>
+                <select
+                  className={inputClass}
+                  value={value.businessDetails.state}
+                  onChange={(e) => set("businessDetails", { ...value.businessDetails, state: e.target.value })}
+                >
+                  <option value="">Not applicable</option>
+                  {INDIAN_STATES.map((s) => (
+                    <option key={s} value={s}>
+                      {s}
+                    </option>
+                  ))}
+                </select>
+              </div>
               <div className="sm:col-span-2">
                 <label className={labelClass}>Billing address</label>
                 <textarea
@@ -455,6 +491,21 @@ export function DocumentEditor({
                   rows={2}
                   value={value.businessDetails.shippingAddress}
                   onChange={(e) => set("businessDetails", { ...value.businessDetails, shippingAddress: e.target.value })}
+                />
+              </div>
+              <div>
+                <label className={labelClass}>Authorized signatory</label>
+                <input
+                  className={inputClass}
+                  value={value.businessDetails.authorizedSignatory}
+                  onChange={(e) => set("businessDetails", { ...value.businessDetails, authorizedSignatory: e.target.value })}
+                />
+              </div>
+              <div>
+                <label className={labelClass}>Signature</label>
+                <LogoUpload
+                  value={value.businessDetails.signatureDataUrl}
+                  onChange={(v) => set("businessDetails", { ...value.businessDetails, signatureDataUrl: v })}
                 />
               </div>
             </div>

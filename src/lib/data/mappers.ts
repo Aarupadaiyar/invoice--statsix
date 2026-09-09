@@ -38,6 +38,7 @@ export function toDocumentRecord(row: DocumentRow): DocumentRecord {
     paymentDate: row.payment_date,
     paymentMethod: row.payment_method as DocumentRecord["paymentMethod"],
     currency: row.currency,
+    placeOfSupply: row.place_of_supply ?? "",
     businessDetails,
     customerDetails,
     customerId: row.customer_id,
@@ -67,6 +68,7 @@ export function toDocumentInput(doc: DocumentRecord): DocumentInput {
     paymentDate: doc.paymentDate,
     paymentMethod: doc.paymentMethod,
     currency: doc.currency,
+    placeOfSupply: doc.placeOfSupply,
     customerId: doc.customerId,
     businessDetails: doc.businessDetails,
     customerDetails: doc.customerDetails,
@@ -130,6 +132,9 @@ export type BusinessProfileRecord = {
   swiftCode: string;
   upiId: string;
   paymentLink: string;
+  state: string;
+  signatureDataUrl: string;
+  authorizedSignatory: string;
 };
 
 export function toBusinessProfileRecord(row: BusinessProfileRow | null): BusinessProfileRecord {
@@ -156,29 +161,38 @@ export function toBusinessProfileRecord(row: BusinessProfileRow | null): Busines
       swiftCode: "",
       upiId: "",
       paymentLink: "",
+      state: "",
+      signatureDataUrl: "",
+      authorizedSignatory: "",
     };
   }
+  // `?? ""` guards against a database that predates a column (migration not yet run):
+  // Supabase simply omits the key from the row rather than erroring, which would
+  // otherwise leak `undefined` into code that assumes these are always strings.
   return {
-    businessName: row.business_name,
-    logoDataUrl: row.logo_data_url,
-    billingAddress: row.address,
-    shippingAddress: row.shipping_address,
-    phone: row.phone,
-    email: row.email,
-    website: row.website,
-    taxId: row.tax_id,
-    defaultCurrency: row.default_currency,
-    defaultPaymentTerms: row.default_payment_terms,
-    invoicePrefix: row.invoice_prefix,
-    receiptPrefix: row.receipt_prefix,
-    defaultNotes: row.default_notes,
-    defaultTerms: row.default_terms,
-    bankName: row.bank_name,
-    accountHolderName: row.account_holder_name,
-    accountNumber: row.account_number,
-    ifscCode: row.ifsc_code,
-    swiftCode: row.swift_code,
-    upiId: row.upi_id,
-    paymentLink: row.payment_link,
+    businessName: row.business_name ?? "",
+    logoDataUrl: row.logo_data_url ?? "",
+    billingAddress: row.address ?? "",
+    shippingAddress: row.shipping_address ?? "",
+    phone: row.phone ?? "",
+    email: row.email ?? "",
+    website: row.website ?? "",
+    taxId: row.tax_id ?? "",
+    defaultCurrency: row.default_currency ?? "USD",
+    defaultPaymentTerms: row.default_payment_terms ?? "",
+    invoicePrefix: row.invoice_prefix ?? "INV-",
+    receiptPrefix: row.receipt_prefix ?? "REC-",
+    defaultNotes: row.default_notes ?? "",
+    defaultTerms: row.default_terms ?? "",
+    bankName: row.bank_name ?? "",
+    accountHolderName: row.account_holder_name ?? "",
+    accountNumber: row.account_number ?? "",
+    ifscCode: row.ifsc_code ?? "",
+    swiftCode: row.swift_code ?? "",
+    upiId: row.upi_id ?? "",
+    paymentLink: row.payment_link ?? "",
+    state: row.state ?? "",
+    signatureDataUrl: row.signature_data_url ?? "",
+    authorizedSignatory: row.authorized_signatory ?? "",
   };
 }

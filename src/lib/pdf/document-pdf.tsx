@@ -1,7 +1,8 @@
 import { Document, Page, View, Text, Image, StyleSheet, Font } from "@react-pdf/renderer";
 import type { DocumentRecord } from "@/types/document";
-import { calcDocumentTotals, calcLineTotal, formatCurrency } from "@/lib/calc";
+import { calcDocumentTotals, calcGstSplit, calcLineTotal, formatCurrency } from "@/lib/calc";
 import { formatDate, statusLabel } from "@/lib/format";
+import { amountToWords } from "@/lib/number-to-words";
 
 Font.registerHyphenationCallback((word) => [word]);
 
@@ -66,7 +67,11 @@ const styles = StyleSheet.create({
   },
   th: { fontSize: 8, fontWeight: 700, color: COLORS.muted, textTransform: "uppercase" },
   colItem: { width: "30%" },
+  colItemGst: { width: "20%" },
+  colHsn: { width: "12%" },
+  colUnit: { width: "8%" },
   colQty: { width: "10%", textAlign: "right" },
+  colQtyGst: { width: "8%", textAlign: "right" },
   colRate: { width: "15%", textAlign: "right" },
   colDiscount: { width: "13%", textAlign: "right" },
   colTax: { width: "10%", textAlign: "right" },
@@ -128,6 +133,8 @@ export function DocumentPdf({ doc }: { doc: DocumentRecord }) {
   const b = doc.businessDetails;
   const c = doc.customerDetails;
   const hasPaymentInfo = Boolean(b.bankName || b.accountNumber || b.upiId || b.paymentLink);
+  const gst = calcGstSplit(totals.taxTotal, b.state, doc.placeOfSupply);
+  const hasHsnOrUnit = doc.lineItems.some((item) => item.hsnSac || item.unit);
 
   return (
     <Document title={`${isInvoice ? "Invoice" : "Receipt"}-${doc.documentNumber}`}>
@@ -170,6 +177,12 @@ export function DocumentPdf({ doc }: { doc: DocumentRecord }) {
                 <Text style={styles.metaValue}>{statusLabel(doc.paymentMethod)}</Text>
               </View>
             ) : null}
+            {doc.placeOfSupply ? (
+              <View style={styles.metaRow}>
+                <Text style={styles.metaLabel}>Place of Supply</Text>
+                <Text style={styles.metaValue}>{doc.placeOfSupply}</Text>
+              </View>
+            ) : null}
             <View style={{ alignItems: "flex-end" }}>
               <Text style={styles.statusBadge}>{statusLabel(doc.status)}</Text>
             </View>
@@ -199,8 +212,10 @@ export function DocumentPdf({ doc }: { doc: DocumentRecord }) {
 
         <View style={styles.table}>
           <View style={styles.tableHeaderRow} fixed>
-            <Text style={[styles.th, styles.colItem]}>Item</Text>
-            <Text style={[styles.th, styles.colQty]}>Qty</Text>
+            <Text style={hasHsnOrUnit ? [styles.th, styles.colItemGst] : [styles.th, styles.colItem]}>Item</Text>
+            {hasHsnOrUnit ? <Text style={[styles.th, styles.colHsn]}>HSN/SAC</Text> : null}
+            <Text style={hasHsnOrUnit ? [styles.th, styles.colQtyGst] : [styles.th, styles.colQty]}>Qty</Text>
+            {hasHsnOrUnit ? <Text style={[styles.th, styles.colUnit]}>Unit</Text> : null}
             <Text style={[styles.th, styles.colRate]}>Rate</Text>
             <Text style={[styles.th, styles.colDiscount]}>Discount</Text>
             <Text style={[styles.th, styles.colTax]}>Tax</Text>
@@ -213,11 +228,13 @@ export function DocumentPdf({ doc }: { doc: DocumentRecord }) {
           ) : (
             doc.lineItems.map((item, idx) => (
               <View style={styles.tableRow} key={item.id || idx} wrap={false}>
-                <View style={styles.colItem}>
+                <View style={hasHsnOrUnit ? styles.colItemGst : styles.colItem}>
                   <Text>{item.name || "Untitled item"}</Text>
                   {item.description ? <Text style={styles.itemDescription}>{item.description}</Text> : null}
                 </View>
-                <Text style={styles.colQty}>{item.quantity}</Text>
+                {hasHsnOrUnit ? <Text style={styles.colHsn}>{item.hsnSac || "—"}</Text> : null}
+                <Text style={hasHsnOrUnit ? styles.colQtyGst : styles.colQty}>{item.quantity}</Text>
+                {hasHsnOrUnit ? <Text style={styles.colUnit}>{item.unit || "—"}</Text> : null}
                 <Text style={styles.colRate}>{money(item.rate, doc.currency)}</Text>
                 <Text style={styles.colDiscount}>{item.discount ? money(item.discount, doc.currency) : "—"}</Text>
                 <Text style={styles.colTax}>{item.taxRate ? `${item.taxRate}%` : "—"}</Text>
@@ -239,7 +256,25 @@ export function DocumentPdf({ doc }: { doc: DocumentRecord }) {
                 <Text style={styles.totalsValue}>-{money(totals.discountTotal, doc.currency)}</Text>
               </View>
             ) : null}
-            {totals.taxTotal > 0 ? (
+            {totals.taxTotal > 0 && gst.applicable ? (
+              gst.isIntraState ? (
+                <>
+                  <View style={styles.totalsRow}>
+                    <Text style={styles.totalsLabel}>CGST</Text>
+                    <Text style={styles.totalsValue}>{money(gst.cgst, doc.currency)}</Text>
+                  </View>
+                  <View style={styles.totalsRow}>
+                    <Text style={styles.totalsLabel}>SGST</Text>
+                    <Text style={styles.totalsValue}>{money(gst.sgst, doc.currency)}</Text>
+                  </View>
+                </>
+              ) : (
+                <View style={styles.totalsRow}>
+                  <Text style={styles.totalsLabel}>IGST</Text>
+                  <Text style={styles.totalsValue}>{money(gst.igst, doc.currency)}</Text>
+                </View>
+              )
+            ) : totals.taxTotal > 0 ? (
               <View style={styles.totalsRow}>
                 <Text style={styles.totalsLabel}>Tax</Text>
                 <Text style={styles.totalsValue}>{money(totals.taxTotal, doc.currency)}</Text>
@@ -271,6 +306,12 @@ export function DocumentPdf({ doc }: { doc: DocumentRecord }) {
           </View>
         </View>
 
+        <View style={{ alignItems: "flex-end", marginBottom: 14 }}>
+          <Text style={[styles.mutedLine, { fontSize: 8 }]}>
+            Amount in words: {amountToWords(totals.total, doc.currency)}
+          </Text>
+        </View>
+
         <View style={styles.twoColSection}>
           {hasPaymentInfo ? (
             <View style={{ width: "48%" }}>
@@ -300,6 +341,21 @@ export function DocumentPdf({ doc }: { doc: DocumentRecord }) {
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Terms &amp; Conditions</Text>
             <Text style={styles.sectionText}>{doc.terms}</Text>
+          </View>
+        ) : null}
+
+        {b.signatureDataUrl || b.authorizedSignatory ? (
+          <View style={{ alignItems: "flex-end", marginTop: 16 }}>
+            <View style={{ alignItems: "center" }}>
+              {/* eslint-disable-next-line jsx-a11y/alt-text -- @react-pdf/renderer's Image has no alt prop */}
+              {b.signatureDataUrl ? <Image src={b.signatureDataUrl} style={{ width: 100, height: 40, objectFit: "contain" }} /> : (
+                <View style={{ height: 40 }} />
+              )}
+              <View style={{ width: 140, borderTop: `1pt solid ${COLORS.border}`, paddingTop: 4, alignItems: "center" }}>
+                {b.authorizedSignatory ? <Text style={{ fontSize: 9, fontWeight: 700 }}>{b.authorizedSignatory}</Text> : null}
+                <Text style={{ fontSize: 7, color: COLORS.muted }}>Authorized Signatory</Text>
+              </View>
+            </View>
           </View>
         ) : null}
 

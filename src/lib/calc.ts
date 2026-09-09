@@ -1,5 +1,5 @@
 import Decimal from "decimal.js";
-import type { DocumentTotals, ExtraCharge, LineItem } from "@/types/document";
+import type { DocumentTotals, ExtraCharge, GstSplit, LineItem } from "@/types/document";
 
 Decimal.set({ precision: 20, rounding: Decimal.ROUND_HALF_UP });
 
@@ -58,6 +58,34 @@ export function calcDocumentTotals(lineItems: LineItem[], extra: ExtraCharge): D
     shippingTotal: round2(shippingTotal),
     total: round2(grandTotal.isNegative() ? new Decimal(0) : grandTotal),
   };
+}
+
+/**
+ * Splits a document's total tax into CGST+SGST (same state, "intra-state") or IGST
+ * (different states, "inter-state"), per Indian GST rules. Only applicable when both
+ * the business's state and the document's place of supply are set; otherwise the
+ * document just shows a single combined tax line as before.
+ */
+export function calcGstSplit(
+  taxTotal: number,
+  businessState: string | null | undefined,
+  placeOfSupply: string | null | undefined,
+): GstSplit {
+  const state = (businessState ?? "").trim();
+  const supply = (placeOfSupply ?? "").trim();
+  const applicable = Boolean(state && supply);
+  if (!applicable) {
+    return { applicable: false, isIntraState: false, cgst: 0, sgst: 0, igst: 0 };
+  }
+
+  const isIntraState = state.toLowerCase() === supply.toLowerCase();
+  const tax = d(taxTotal);
+
+  if (isIntraState) {
+    const half = round2(tax.div(2));
+    return { applicable: true, isIntraState: true, cgst: half, sgst: half, igst: 0 };
+  }
+  return { applicable: true, isIntraState: false, cgst: 0, sgst: 0, igst: round2(tax) };
 }
 
 export function formatCurrency(amount: number, currency: string): string {

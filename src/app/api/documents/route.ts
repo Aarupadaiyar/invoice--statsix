@@ -64,6 +64,7 @@ export async function POST(req: NextRequest) {
       payment_date: v.paymentDate || null,
       payment_method: v.paymentMethod || null,
       currency: v.currency,
+      place_of_supply: v.placeOfSupply,
       business_details: v.businessDetails,
       customer_details: v.customerDetails,
       line_items: v.lineItems,

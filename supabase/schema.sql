@@ -30,12 +30,18 @@ create table if not exists public.business_profiles (
   swift_code            text not null default '',
   upi_id                text not null default '',
   payment_link          text not null default '',
+  state                 text not null default '',
+  signature_data_url    text not null default '',
+  authorized_signatory  text not null default '',
   created_at            timestamptz not null default now(),
   updated_at            timestamptz not null default now()
 );
 
--- Safe to re-run: adds the column for databases created before business shipping addresses existed.
+-- Safe to re-run: adds columns for databases created before these fields existed.
 alter table public.business_profiles add column if not exists shipping_address text not null default '';
+alter table public.business_profiles add column if not exists state text not null default '';
+alter table public.business_profiles add column if not exists signature_data_url text not null default '';
+alter table public.business_profiles add column if not exists authorized_signatory text not null default '';
 
 -- ---------------------------------------------------------------------------
 -- customers: address book scoped per user
@@ -88,6 +94,7 @@ create table if not exists public.documents (
   payment_date     date,
   payment_method   text,
   currency         text not null default 'USD',
+  place_of_supply  text not null default '',
   business_details jsonb not null default '{}'::jsonb,
   customer_details jsonb not null default '{}'::jsonb,
   line_items       jsonb not null default '[]'::jsonb,
@@ -107,6 +114,7 @@ create table if not exists public.documents (
 
 -- Safe to re-run: adds the column for databases created before document_title existed.
 alter table public.documents add column if not exists document_title text not null default '';
+alter table public.documents add column if not exists place_of_supply text not null default '';
 
 create index if not exists documents_user_id_idx on public.documents(user_id);
 create index if not exists documents_user_type_idx on public.documents(user_id, document_type);

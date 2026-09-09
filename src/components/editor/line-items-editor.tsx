@@ -1,7 +1,7 @@
 "use client";
 
 import { Plus, Trash2 } from "lucide-react";
-import { emptyLineItem, type LineItem } from "@/types/document";
+import { emptyLineItem, UNIT_PRESETS, type LineItem } from "@/types/document";
 import { calcLineTotal, formatCurrency } from "@/lib/calc";
 import { inputClass, labelClass } from "@/lib/ui";
 
@@ -31,13 +31,18 @@ export function LineItemsEditor({
     return Number.isFinite(n) ? n : 0;
   }
 
-  const desktopGridCols = "md:grid-cols-[minmax(180px,1fr)_64px_84px_84px_60px_96px_28px]";
+  const desktopGridCols =
+    "md:grid-cols-[minmax(160px,1fr)_90px_56px_72px_84px_84px_60px_96px_28px]";
 
   return (
     <div className="md:overflow-x-auto">
-      <div className={`hidden md:grid ${desktopGridCols} md:min-w-[640px] gap-2 px-1 pb-2 text-xs font-medium uppercase tracking-wide text-black/40`}>
+      <div
+        className={`hidden md:grid ${desktopGridCols} md:min-w-[800px] gap-2 px-1 pb-2 text-xs font-medium uppercase tracking-wide text-black/40`}
+      >
         <span>Item</span>
+        <span>HSN/SAC</span>
         <span className="text-right">Qty</span>
+        <span>Unit</span>
         <span className="text-right">Rate</span>
         <span className="text-right">Discount</span>
         <span className="text-right">Tax %</span>
@@ -49,7 +54,7 @@ export function LineItemsEditor({
         {items.map((item) => (
           <div
             key={item.id}
-            className={`grid grid-cols-2 ${desktopGridCols} md:min-w-[640px] gap-x-2 gap-y-2 md:items-center rounded-lg border border-black/5 md:border-0 p-3 md:p-0`}
+            className={`grid grid-cols-2 ${desktopGridCols} md:min-w-[800px] gap-x-2 gap-y-2 md:items-center rounded-lg border border-black/5 md:border-0 p-3 md:p-0`}
           >
             <div className="col-span-2 md:col-span-1">
               <input
@@ -62,6 +67,15 @@ export function LineItemsEditor({
 
             <div className="col-span-2 md:contents grid grid-cols-2 gap-2 md:gap-0">
               <div>
+                <label className={`md:hidden ${labelClass}`}>HSN/SAC</label>
+                <input
+                  className={inputClass}
+                  placeholder="HSN/SAC"
+                  value={item.hsnSac}
+                  onChange={(e) => update(item.id, { hsnSac: e.target.value })}
+                />
+              </div>
+              <div>
                 <label className={`md:hidden ${labelClass}`}>Qty</label>
                 <input
                   type="number"
@@ -70,6 +84,16 @@ export function LineItemsEditor({
                   min={0}
                   step="any"
                   onChange={(e) => update(item.id, { quantity: numberField(e.target.value) })}
+                />
+              </div>
+              <div>
+                <label className={`md:hidden ${labelClass}`}>Unit</label>
+                <input
+                  className={inputClass}
+                  list="line-item-units"
+                  placeholder="pcs"
+                  value={item.unit}
+                  onChange={(e) => update(item.id, { unit: e.target.value })}
                 />
               </div>
               <div>
@@ -122,6 +146,12 @@ export function LineItemsEditor({
           </div>
         ))}
       </div>
+
+      <datalist id="line-item-units">
+        {UNIT_PRESETS.map((u) => (
+          <option key={u} value={u} />
+        ))}
+      </datalist>
 
       <button
         type="button"

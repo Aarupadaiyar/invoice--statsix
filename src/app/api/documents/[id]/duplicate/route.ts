@@ -36,6 +36,7 @@ export async function POST(_req: NextRequest, { params }: { params: Promise<{ id
       payment_date: null,
       payment_method: source.payment_method,
       currency: source.currency,
+      place_of_supply: source.place_of_supply,
       business_details: source.business_details,
       customer_details: source.customer_details,
       line_items: source.line_items,
