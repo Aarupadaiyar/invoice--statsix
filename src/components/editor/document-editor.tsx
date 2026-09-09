@@ -11,6 +11,7 @@ import {
   PAYMENT_METHODS,
   CURRENCIES,
   DOCUMENT_TITLE_PRESETS,
+  DOCUMENT_TITLE_PREFIXES,
   INDIAN_STATES,
   defaultDocumentTitle,
 } from "@/types/document";
@@ -123,6 +124,7 @@ export function DocumentEditor({
   const [mobileTab, setMobileTab] = useState<"edit" | "preview">("edit");
   const [draftRestored, setDraftRestored] = useState(false);
   const hydratedRef = useRef(false);
+  const lastTitleForNumberRef = useRef(value.documentTitle);
 
   useEffect(() => {
     if (hydratedRef.current) return;
@@ -169,6 +171,30 @@ export function DocumentEditor({
 
   function setExtraCharge(patch: Partial<ExtraCharge>) {
     set("extraCharge", { ...value.extraCharge, ...patch });
+  }
+
+  /**
+   * Proforma Invoice, Quotation, Estimate etc. each number in their own series
+   * (PI-0001, QUO-0001...), separate from regular Tax Invoice numbering. When the
+   * heading changes on a new, unsaved document, suggest that series's next number.
+   * Never touches the number on a document that's already been saved.
+   */
+  async function handleTitleBlur() {
+    if (id) return;
+    const title = value.documentTitle.trim();
+    if (title === lastTitleForNumberRef.current) return;
+    lastTitleForNumberRef.current = title;
+
+    const defaultPrefix = type === "invoice" ? profile.invoicePrefix || "INV-" : profile.receiptPrefix || "REC-";
+    const prefix = DOCUMENT_TITLE_PREFIXES[title] ?? defaultPrefix;
+    try {
+      const { documentNumber } = await api.get<{ documentNumber: string }>(
+        `/api/documents/next-number?type=${type}&prefix=${encodeURIComponent(prefix)}`,
+      );
+      set("documentNumber", documentNumber);
+    } catch {
+      // Non-fatal: keep whatever number is currently shown, user can still edit it directly.
+    }
   }
 
   const clearDraft = useCallback(() => {
@@ -313,6 +339,7 @@ export function DocumentEditor({
                   list="document-title-presets"
                   value={value.documentTitle}
                   onChange={(e) => set("documentTitle", e.target.value)}
+                  onBlur={handleTitleBlur}
                   placeholder={defaultDocumentTitle(type)}
                 />
                 <datalist id="document-title-presets">

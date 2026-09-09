@@ -26,6 +26,29 @@ export const DOCUMENT_TITLE_PRESETS: Record<DocumentType, string[]> = {
   receipt: ["Receipt", "Payment Receipt", "Cash Receipt", "Sales Receipt"],
 };
 
+/**
+ * Each document heading gets its own sequential number series (e.g. a Quotation
+ * numbers independently as QUO-0001, QUO-0002..., separate from Tax Invoice's
+ * INV-0001, INV-0002...). Headings not listed here fall back to the user's default
+ * invoice/receipt prefix from their business profile.
+ */
+export const DOCUMENT_TITLE_PREFIXES: Record<string, string> = {
+  Invoice: "INV-",
+  "Tax Invoice": "INV-",
+  "Proforma Invoice": "PI-",
+  Quotation: "QUO-",
+  Quote: "QUO-",
+  Estimate: "EST-",
+  "Estimation Bill": "EST-",
+  "Credit Note": "CN-",
+  "Sales Order": "SO-",
+  "Delivery Challan": "DC-",
+  Receipt: "REC-",
+  "Payment Receipt": "REC-",
+  "Cash Receipt": "REC-",
+  "Sales Receipt": "REC-",
+};
+
 export type LineItem = {
   id: string;
   name: string;
