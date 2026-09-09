@@ -31,12 +31,12 @@ export function LineItemsEditor({
     return Number.isFinite(n) ? n : 0;
   }
 
-  const desktopGridCols = "md:grid-cols-[minmax(220px,1fr)_64px_84px_84px_60px_96px_28px]";
+  const desktopGridCols = "md:grid-cols-[minmax(180px,1fr)_64px_84px_84px_60px_96px_28px]";
 
   return (
     <div className="md:overflow-x-auto">
-      <div className={`hidden md:grid ${desktopGridCols} md:min-w-[720px] gap-2 px-1 pb-2 text-xs font-medium uppercase tracking-wide text-black/40`}>
-        <span>Item &amp; description</span>
+      <div className={`hidden md:grid ${desktopGridCols} md:min-w-[640px] gap-2 px-1 pb-2 text-xs font-medium uppercase tracking-wide text-black/40`}>
+        <span>Item</span>
         <span className="text-right">Qty</span>
         <span className="text-right">Rate</span>
         <span className="text-right">Discount</span>
@@ -49,21 +49,14 @@ export function LineItemsEditor({
         {items.map((item) => (
           <div
             key={item.id}
-            className={`grid grid-cols-2 ${desktopGridCols} md:min-w-[720px] gap-x-2 gap-y-2 md:items-center rounded-lg border border-black/5 md:border-0 p-3 md:p-0`}
+            className={`grid grid-cols-2 ${desktopGridCols} md:min-w-[640px] gap-x-2 gap-y-2 md:items-center rounded-lg border border-black/5 md:border-0 p-3 md:p-0`}
           >
-            <div className="col-span-2 md:col-span-1 md:self-start space-y-1.5">
+            <div className="col-span-2 md:col-span-1">
               <input
                 className={inputClass}
                 placeholder="Item or service name"
                 value={item.name}
                 onChange={(e) => update(item.id, { name: e.target.value })}
-              />
-              <textarea
-                className={`${inputClass} resize-y`}
-                placeholder="Description (optional)"
-                rows={2}
-                value={item.description}
-                onChange={(e) => update(item.id, { description: e.target.value })}
               />
             </div>
 
