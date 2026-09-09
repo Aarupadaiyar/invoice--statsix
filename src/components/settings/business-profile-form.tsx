@@ -76,8 +76,23 @@ export function BusinessProfileForm({ initialProfile }: { initialProfile: Busine
           <Field label="Website">
             <input className={inputClass} value={profile.website} onChange={(e) => set("website", e.target.value)} />
           </Field>
-          <Field label="Address">
-            <input className={inputClass} value={profile.address} onChange={(e) => set("address", e.target.value)} />
+        </div>
+        <div className="grid sm:grid-cols-2 gap-4 mt-4">
+          <Field label="Billing address">
+            <textarea
+              className={inputClass}
+              rows={2}
+              value={profile.billingAddress}
+              onChange={(e) => set("billingAddress", e.target.value)}
+            />
+          </Field>
+          <Field label="Shipping address">
+            <textarea
+              className={inputClass}
+              rows={2}
+              value={profile.shippingAddress}
+              onChange={(e) => set("shippingAddress", e.target.value)}
+            />
           </Field>
         </div>
       </div>

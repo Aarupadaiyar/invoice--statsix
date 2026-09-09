@@ -20,7 +20,10 @@ export function DocumentPreview({ doc }: { doc: DocumentInput }) {
               <img src={b.logoDataUrl} alt="Logo" className="h-16 max-w-[160px] object-contain mb-2" />
             ) : null}
             <p className="text-lg font-bold break-words">{b.businessName || "Your Business"}</p>
-            {b.address ? <p className="text-black/50 text-xs mt-1 whitespace-pre-line">{b.address}</p> : null}
+            {b.billingAddress ? <p className="text-black/50 text-xs mt-1 whitespace-pre-line">{b.billingAddress}</p> : null}
+            {b.shippingAddress && b.shippingAddress !== b.billingAddress ? (
+              <p className="text-black/50 text-xs mt-1 whitespace-pre-line">Ships from: {b.shippingAddress}</p>
+            ) : null}
             {b.phone || b.email ? (
               <p className="text-black/50 text-xs mt-1">{[b.phone, b.email].filter(Boolean).join("  •  ")}</p>
             ) : null}

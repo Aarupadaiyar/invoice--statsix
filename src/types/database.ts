@@ -10,6 +10,7 @@ export type Database = {
           business_name: string;
           logo_data_url: string;
           address: string;
+          shipping_address: string;
           phone: string;
           email: string;
           website: string;

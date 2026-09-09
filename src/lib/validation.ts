@@ -14,7 +14,8 @@ export const loginSchema = z.object({
 export const businessProfileSchema = z.object({
   businessName: z.string().trim().max(200).default(""),
   logoDataUrl: z.string().max(2_000_000).default(""),
-  address: z.string().trim().max(1000).default(""),
+  billingAddress: z.string().trim().max(1000).default(""),
+  shippingAddress: z.string().trim().max(1000).default(""),
   phone: z.string().trim().max(50).default(""),
   email: z.string().trim().max(200).refine((v) => v === "" || z.string().email().safeParse(v).success, {
     message: "Enter a valid email address",
@@ -69,7 +70,8 @@ const extraChargeSchema = z.object({
 const businessDetailsSchema = z.object({
   businessName: z.string().max(200).default(""),
   logoDataUrl: z.string().max(2_000_000).default(""),
-  address: z.string().max(1000).default(""),
+  billingAddress: z.string().max(1000).default(""),
+  shippingAddress: z.string().max(1000).default(""),
   phone: z.string().max(50).default(""),
   email: z.string().max(200).default(""),
   website: z.string().max(200).default(""),

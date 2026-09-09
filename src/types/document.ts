@@ -28,7 +28,8 @@ export type LineItem = {
 export type BusinessDetails = {
   businessName: string;
   logoDataUrl: string;
-  address: string;
+  billingAddress: string;
+  shippingAddress: string;
   phone: string;
   email: string;
   website: string;
@@ -113,7 +114,8 @@ export function emptyBusinessDetails(): BusinessDetails {
   return {
     businessName: "",
     logoDataUrl: "",
-    address: "",
+    billingAddress: "",
+    shippingAddress: "",
     phone: "",
     email: "",
     website: "",

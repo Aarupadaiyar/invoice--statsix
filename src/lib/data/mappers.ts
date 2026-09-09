@@ -17,7 +17,12 @@ type CustomerRow = Database["public"]["Tables"]["customers"]["Row"];
 type BusinessProfileRow = Database["public"]["Tables"]["business_profiles"]["Row"];
 
 export function toDocumentRecord(row: DocumentRow): DocumentRecord {
-  const businessDetails = { ...emptyBusinessDetails(), ...(row.business_details as object) } as BusinessDetails;
+  const rawBusinessDetails = (row.business_details ?? {}) as Record<string, unknown> & { address?: string };
+  const businessDetails = { ...emptyBusinessDetails(), ...rawBusinessDetails } as BusinessDetails;
+  // Older documents stored a single `address` field before billing/shipping were split out.
+  if (!businessDetails.billingAddress && rawBusinessDetails.address) {
+    businessDetails.billingAddress = rawBusinessDetails.address;
+  }
   const customerDetails = { ...emptyCustomerDetails(), ...(row.customer_details as object) } as CustomerDetails;
   const extraCharge = { ...emptyExtraCharge(), ...(row.extra_charge as object) } as ExtraCharge;
   const lineItems = (Array.isArray(row.line_items) ? row.line_items : []) as unknown as LineItem[];
@@ -106,7 +111,8 @@ export function toCustomerRecord(row: CustomerRow): CustomerRecord {
 export type BusinessProfileRecord = {
   businessName: string;
   logoDataUrl: string;
-  address: string;
+  billingAddress: string;
+  shippingAddress: string;
   phone: string;
   email: string;
   website: string;
@@ -131,7 +137,8 @@ export function toBusinessProfileRecord(row: BusinessProfileRow | null): Busines
     return {
       businessName: "",
       logoDataUrl: "",
-      address: "",
+      billingAddress: "",
+      shippingAddress: "",
       phone: "",
       email: "",
       website: "",
@@ -154,7 +161,8 @@ export function toBusinessProfileRecord(row: BusinessProfileRow | null): Busines
   return {
     businessName: row.business_name,
     logoDataUrl: row.logo_data_url,
-    address: row.address,
+    billingAddress: row.address,
+    shippingAddress: row.shipping_address,
     phone: row.phone,
     email: row.email,
     website: row.website,

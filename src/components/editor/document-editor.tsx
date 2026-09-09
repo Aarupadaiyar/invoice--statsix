@@ -71,7 +71,8 @@ function buildInitialValue(opts: {
     businessDetails: {
       businessName: opts.profile.businessName,
       logoDataUrl: opts.profile.logoDataUrl,
-      address: opts.profile.address,
+      billingAddress: opts.profile.billingAddress,
+      shippingAddress: opts.profile.shippingAddress,
       phone: opts.profile.phone,
       email: opts.profile.email,
       website: opts.profile.website,
@@ -430,12 +431,30 @@ export function DocumentEditor({
                   onChange={(e) => set("businessDetails", { ...value.businessDetails, email: e.target.value })}
                 />
               </div>
-              <div className="sm:col-span-2">
-                <label className={labelClass}>Address</label>
+              <div>
+                <label className={labelClass}>Tax / GST / VAT number</label>
                 <input
                   className={inputClass}
-                  value={value.businessDetails.address}
-                  onChange={(e) => set("businessDetails", { ...value.businessDetails, address: e.target.value })}
+                  value={value.businessDetails.taxId}
+                  onChange={(e) => set("businessDetails", { ...value.businessDetails, taxId: e.target.value })}
+                />
+              </div>
+              <div className="sm:col-span-2">
+                <label className={labelClass}>Billing address</label>
+                <textarea
+                  className={inputClass}
+                  rows={2}
+                  value={value.businessDetails.billingAddress}
+                  onChange={(e) => set("businessDetails", { ...value.businessDetails, billingAddress: e.target.value })}
+                />
+              </div>
+              <div className="sm:col-span-2">
+                <label className={labelClass}>Shipping address</label>
+                <textarea
+                  className={inputClass}
+                  rows={2}
+                  value={value.businessDetails.shippingAddress}
+                  onChange={(e) => set("businessDetails", { ...value.businessDetails, shippingAddress: e.target.value })}
                 />
               </div>
             </div>

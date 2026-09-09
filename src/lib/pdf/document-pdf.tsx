@@ -137,7 +137,10 @@ export function DocumentPdf({ doc }: { doc: DocumentRecord }) {
             {/* eslint-disable-next-line jsx-a11y/alt-text -- @react-pdf/renderer's Image has no alt prop */}
             {b.logoDataUrl ? <Image src={b.logoDataUrl} style={styles.logo} /> : null}
             <Text style={styles.businessName}>{b.businessName || "Your Business"}</Text>
-            {b.address ? <Text style={styles.mutedLine}>{b.address}</Text> : null}
+            {b.billingAddress ? <Text style={styles.mutedLine}>{b.billingAddress}</Text> : null}
+            {b.shippingAddress && b.shippingAddress !== b.billingAddress ? (
+              <Text style={styles.mutedLine}>Ships from: {b.shippingAddress}</Text>
+            ) : null}
             {(b.phone || b.email) ? <Text style={styles.mutedLine}>{[b.phone, b.email].filter(Boolean).join("  •  ")}</Text> : null}
             {b.website ? <Text style={styles.mutedLine}>{b.website}</Text> : null}
             {b.taxId ? <Text style={styles.mutedLine}>Tax ID: {b.taxId}</Text> : null}
