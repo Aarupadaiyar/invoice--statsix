@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { inputClass, labelClass, btnPrimary } from "@/lib/ui";
 import { Loader2 } from "lucide-react";
+import { AuthDivider, GoogleButton } from "@/components/auth/google-button";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -67,6 +68,9 @@ export default function SignupPage() {
     <div>
       <h1 className="text-xl font-semibold mb-1">Create your account</h1>
       <p className="text-sm text-black/50 mb-6">Start creating professional invoices in minutes.</p>
+
+      <GoogleButton label="Sign up with Google" />
+      <AuthDivider />
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>

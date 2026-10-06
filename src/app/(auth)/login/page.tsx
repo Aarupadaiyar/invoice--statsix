@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { inputClass, labelClass, btnPrimary, btnSecondary } from "@/lib/ui";
 import { Loader2, Mail } from "lucide-react";
+import { AuthDivider, GoogleButton } from "@/components/auth/google-button";
 
 export default function LoginPage() {
   return (
@@ -82,6 +83,9 @@ function LoginForm() {
     <div>
       <h1 className="text-xl font-semibold mb-1">Welcome back</h1>
       <p className="text-sm text-black/50 mb-6">Log in to manage your invoices and receipts.</p>
+
+      <GoogleButton next={searchParams.get("next") || "/dashboard"} />
+      <AuthDivider />
 
       {mode === "password" ? (
         <form onSubmit={handlePasswordSubmit} className="space-y-4">
