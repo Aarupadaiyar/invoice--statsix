@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requireUser, errorResponse } from "@/lib/api-helpers";
+import { requireUser, errorResponse, dbError } from "@/lib/api-helpers";
 import { customerSchema } from "@/lib/validation";
 import { toCustomerRecord } from "@/lib/data/mappers";
 
@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
   }
 
   const { data, error } = await query;
-  if (error) return errorResponse(error.message, 500);
+  if (error) return dbError(error);
 
   return NextResponse.json({ customers: (data ?? []).map(toCustomerRecord) });
 }
@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
     .select("*")
     .single();
 
-  if (error) return errorResponse(error.message, 500);
+  if (error) return dbError(error);
 
   return NextResponse.json({ customer: toCustomerRecord(data) }, { status: 201 });
 }

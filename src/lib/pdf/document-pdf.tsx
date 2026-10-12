@@ -3,8 +3,18 @@ import type { DocumentRecord } from "@/types/document";
 import { calcDocumentTotals, calcGstSplit, calcLineTotal, formatCurrency } from "@/lib/calc";
 import { formatDate, statusLabel } from "@/lib/format";
 import { amountToWords } from "@/lib/number-to-words";
+import { NOTO_SANS_BOLD, NOTO_SANS_REGULAR } from "@/lib/pdf/fonts";
 
 Font.registerHyphenationCallback((word) => [word]);
+
+// The built-in PDF fonts have no rupee sign (it printed as a stray "1"), so embed a font that does.
+Font.register({
+  family: "Noto Sans",
+  fonts: [
+    { src: NOTO_SANS_REGULAR, fontWeight: 400 },
+    { src: NOTO_SANS_BOLD, fontWeight: 700 },
+  ],
+});
 
 const COLORS = {
   ink: "#1a1d23",
@@ -22,7 +32,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
     fontSize: 9.5,
     color: COLORS.ink,
-    fontFamily: "Helvetica",
+    fontFamily: "Noto Sans",
   },
   headerRow: { flexDirection: "row", justifyContent: "space-between", marginBottom: 24 },
   logo: { width: 88, height: 88, objectFit: "contain", marginBottom: 8 },
@@ -67,15 +77,15 @@ const styles = StyleSheet.create({
   },
   th: { fontSize: 8, fontWeight: 700, color: COLORS.muted, textTransform: "uppercase" },
   colItem: { width: "30%" },
-  colItemGst: { width: "20%" },
-  colHsn: { width: "12%" },
-  colUnit: { width: "8%" },
+  colItemGst: { width: "22%" },
+  colHsn: { width: "11%" },
+  colUnit: { width: "8%", paddingLeft: 8 },
   colQty: { width: "10%", textAlign: "right" },
   colQtyGst: { width: "8%", textAlign: "right" },
   colRate: { width: "15%", textAlign: "right" },
-  colDiscount: { width: "13%", textAlign: "right" },
-  colTax: { width: "10%", textAlign: "right" },
-  colAmount: { width: "17%", textAlign: "right", fontWeight: 700 },
+  colDiscount: { width: "12%", textAlign: "right" },
+  colTax: { width: "8%", textAlign: "right" },
+  colAmount: { width: "16%", textAlign: "right", fontWeight: 700 },
   itemDescription: { fontSize: 8.5, color: COLORS.muted, marginTop: 2 },
   totalsWrap: { flexDirection: "row", justifyContent: "flex-end", marginBottom: 20 },
   totalsBox: { width: 230 },

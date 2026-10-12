@@ -49,6 +49,17 @@ export const DOCUMENT_TITLE_PREFIXES: Record<string, string> = {
   "Sales Receipt": "REC-",
 };
 
+/** Headings that are not billable invoices, so they are excluded from invoice totals and outstanding amounts. */
+export const NON_BILLING_TITLES: ReadonlySet<string> = new Set([
+  "Proforma Invoice",
+  "Quotation",
+  "Quote",
+  "Estimate",
+  "Estimation Bill",
+  "Sales Order",
+  "Delivery Challan",
+]);
+
 export type LineItem = {
   id: string;
   name: string;

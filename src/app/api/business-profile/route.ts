@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requireUser, errorResponse } from "@/lib/api-helpers";
+import { requireUser, errorResponse, dbError } from "@/lib/api-helpers";
 import { businessProfileSchema } from "@/lib/validation";
 import { toBusinessProfileRecord } from "@/lib/data/mappers";
 
@@ -13,7 +13,7 @@ export async function GET() {
     .eq("user_id", user.id)
     .maybeSingle();
 
-  if (error) return errorResponse(error.message, 500);
+  if (error) return dbError(error);
 
   return NextResponse.json({ profile: toBusinessProfileRecord(data) });
 }
@@ -64,7 +64,7 @@ export async function PUT(req: NextRequest) {
     .select("*")
     .single();
 
-  if (error) return errorResponse(error.message, 500);
+  if (error) return dbError(error);
 
   return NextResponse.json({ profile: toBusinessProfileRecord(data) });
 }

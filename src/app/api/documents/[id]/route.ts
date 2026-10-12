@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requireUser, errorResponse } from "@/lib/api-helpers";
+import { requireUser, errorResponse, dbError } from "@/lib/api-helpers";
 import { documentSchema } from "@/lib/validation";
 import { toDocumentRecord } from "@/lib/data/mappers";
 import { calcDocumentTotals } from "@/lib/calc";
@@ -11,7 +11,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
   const { id } = await params;
 
   const { data, error } = await supabase.from("documents").select("*").eq("user_id", user.id).eq("id", id).maybeSingle();
-  if (error) return errorResponse(error.message, 500);
+  if (error) return dbError(error);
   if (!data) return errorResponse("Document not found", 404);
 
   return NextResponse.json({ document: toDocumentRecord(data) });
@@ -65,7 +65,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     if (error.code === "23505") {
       return errorResponse(`Document number "${v.documentNumber}" is already in use. Please choose a different number.`, 409);
     }
-    return errorResponse(error.message, 500);
+    return dbError(error);
   }
   if (!data) return errorResponse("Document not found", 404);
 
@@ -88,7 +88,7 @@ export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ 
     .eq("user_id", user.id)
     .eq("id", id);
 
-  if (error) return errorResponse(error.message, 500);
+  if (error) return dbError(error);
   if (!count) return errorResponse("Document not found", 404);
 
   return NextResponse.json({ ok: true });

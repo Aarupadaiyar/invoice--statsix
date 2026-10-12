@@ -40,9 +40,10 @@ export async function syncCounterAfterSave(
 ): Promise<void> {
   let usedValue = 0;
   if (documentNumber.startsWith(prefix)) {
+    // Only purely numeric suffixes count. Custom numbers like "PI-88/26/27" must not
+    // bump the counter to 88 (parseInt would otherwise read the leading digits).
     const suffix = documentNumber.slice(prefix.length);
-    const parsed = parseInt(suffix, 10);
-    if (Number.isFinite(parsed) && parsed > 0) usedValue = parsed;
+    if (/^\d{1,9}$/.test(suffix)) usedValue = parseInt(suffix, 10);
   }
   if (usedValue <= 0) return;
 

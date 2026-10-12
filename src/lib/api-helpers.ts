@@ -20,3 +20,19 @@ export async function requireUser() {
 export function errorResponse(message: string, status = 400) {
   return NextResponse.json({ error: message }, { status });
 }
+
+/** Turns a Supabase/Postgres error into a response; flags an out-of-date database with an actionable message. */
+export function dbError(error: { message: string; code?: string }) {
+  const outOfDate =
+    error.code === "PGRST204" ||
+    error.code === "42703" ||
+    /schema cache|does not exist/i.test(error.message);
+  if (outOfDate) {
+    console.error("Database schema is out of date:", error.message);
+    return errorResponse(
+      "The database is missing a recent update. Run the latest supabase/schema.sql in the Supabase SQL Editor, then try again.",
+      500,
+    );
+  }
+  return errorResponse(error.message, 500);
+}

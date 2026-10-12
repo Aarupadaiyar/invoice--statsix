@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { renderToBuffer } from "@react-pdf/renderer";
-import { requireUser, errorResponse } from "@/lib/api-helpers";
+import { requireUser, errorResponse, dbError } from "@/lib/api-helpers";
 import { toDocumentRecord } from "@/lib/data/mappers";
 import { DocumentPdf } from "@/lib/pdf/document-pdf";
 
@@ -12,7 +12,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
   const { id } = await params;
 
   const { data, error } = await supabase.from("documents").select("*").eq("user_id", user.id).eq("id", id).maybeSingle();
-  if (error) return errorResponse(error.message, 500);
+  if (error) return dbError(error);
   if (!data) return errorResponse("Document not found", 404);
 
   const doc = toDocumentRecord(data);
@@ -25,8 +25,9 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
     return errorResponse("Failed to generate PDF. Please try again.", 500);
   }
 
-  const label = doc.documentType === "invoice" ? "Invoice" : "Receipt";
-  const filename = `${label}-${doc.documentNumber}.pdf`;
+  // Numbers like "PI-88/26/27" contain characters that are invalid in filenames and headers.
+  const safe = (s: string) => s.replace(/[^A-Za-z0-9._-]+/g, "-").replace(/^-+|-+$/g, "");
+  const filename = `${safe(doc.documentTitle) || "Document"}-${safe(doc.documentNumber) || doc.id}.pdf`;
 
   return new NextResponse(new Uint8Array(buffer), {
     status: 200,

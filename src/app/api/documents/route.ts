@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requireUser, errorResponse } from "@/lib/api-helpers";
+import { requireUser, errorResponse, dbError } from "@/lib/api-helpers";
 import { documentSchema } from "@/lib/validation";
 import { toDocumentRecord } from "@/lib/data/mappers";
 import { calcDocumentTotals } from "@/lib/calc";
@@ -33,7 +33,7 @@ export async function GET(req: NextRequest) {
   }
 
   const { data, error } = await query;
-  if (error) return errorResponse(error.message, 500);
+  if (error) return dbError(error);
 
   return NextResponse.json({ documents: (data ?? []).map(toDocumentRecord) });
 }
@@ -85,7 +85,7 @@ export async function POST(req: NextRequest) {
     if (error.code === "23505") {
       return errorResponse(`Document number "${v.documentNumber}" is already in use. Please choose a different number.`, 409);
     }
-    return errorResponse(error.message, 500);
+    return dbError(error);
   }
 
   const inferredPrefix = v.documentNumber.match(/^\D+/)?.[0] ?? "";

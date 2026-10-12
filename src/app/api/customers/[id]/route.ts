@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requireUser, errorResponse } from "@/lib/api-helpers";
+import { requireUser, errorResponse, dbError } from "@/lib/api-helpers";
 import { customerSchema } from "@/lib/validation";
 import { toCustomerRecord } from "@/lib/data/mappers";
 
@@ -9,7 +9,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
   const { id } = await params;
 
   const { data, error } = await supabase.from("customers").select("*").eq("user_id", user.id).eq("id", id).maybeSingle();
-  if (error) return errorResponse(error.message, 500);
+  if (error) return dbError(error);
   if (!data) return errorResponse("Customer not found", 404);
 
   return NextResponse.json({ customer: toCustomerRecord(data) });
@@ -44,7 +44,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     .select("*")
     .maybeSingle();
 
-  if (error) return errorResponse(error.message, 500);
+  if (error) return dbError(error);
   if (!data) return errorResponse("Customer not found", 404);
 
   return NextResponse.json({ customer: toCustomerRecord(data) });
@@ -61,7 +61,7 @@ export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ 
     .eq("user_id", user.id)
     .eq("id", id);
 
-  if (error) return errorResponse(error.message, 500);
+  if (error) return dbError(error);
   if (!count) return errorResponse("Customer not found", 404);
 
   return NextResponse.json({ ok: true });
